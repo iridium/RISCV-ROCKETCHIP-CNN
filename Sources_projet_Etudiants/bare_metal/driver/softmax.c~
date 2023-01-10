@@ -1,0 +1,48 @@
+/**
+ * @file softmax.c
+ * @author Ravoahangy Christian
+ * @author Noizette Luc
+ * @brief File that define all the functions needed to make the softmax of the CNN for the RISCV project
+ * @brief /!\ This is HLS function 
+ * @version 0.1
+ * @date 2019-18-01
+ * 
+ */
+
+#include "softmax.h"
+#include <math.h>
+
+
+/**
+ * @brief Function used to make the softmax module
+ * 
+ * @param inputMatrix 			: The input matrix[180]
+ * @param outputMatrix 			: The output matrix[10]
+ * @param inputWeights 			: The local3Weights matrix
+ * @param inputBiases 			: The local3Biases matrix
+ */
+void softmax(CNN_GLOBAL_TYPE inputMatrix[], CNN_GLOBAL_TYPE outputMatrix[], LOCAL3_WEIGHTS_TYPE inputWeights[], LOCAL3_BIASES_TYPE inputBiases[])
+{
+	CNN_PERCEPTRON_OUTPUT_TYPE intermediateMatrix[CNN_PERCEPTRON_OUTPUT_SIZE];
+	CNN_PERCEPTRON_OUTPUT_TYPE value;
+	int indexWeights;
+	for(int classe = 0 ; classe < CNN_PERCEPTRON_OUTPUT_SIZE ; classe++)
+	{
+		value = 0;
+		for(int index = 0 ; index < CNN_PERCEPTRON_INPUT_SIZE ; index++)
+		{
+			indexWeights = indexCalculation(classe,index,0,0,CNN_PERCEPTRON_OUTPUT_SIZE, CNN_PERCEPTRON_INPUT_SIZE,1,1);
+			value += (CNN_PERCEPTRON_OUTPUT_TYPE)inputMatrix[index]*inputWeights[indexWeights];
+		}
+		intermediateMatrix[classe] = value + (CNN_PERCEPTRON_OUTPUT_TYPE) inputBiases[classe];
+	}
+	double sum = 0;
+	for(int i = 0 ; i < CNN_PERCEPTRON_OUTPUT_SIZE ; i++)
+	{
+		sum += exp((intermediateMatrix[i]));
+	}
+	for(int index = 0 ; index < CNN_PERCEPTRON_OUTPUT_SIZE ; index++)
+	{
+		outputMatrix[index] = (CNN_PERCEPTRON_OUTPUT_TYPE) (exp((intermediateMatrix[index]))/sum);
+	}
+}

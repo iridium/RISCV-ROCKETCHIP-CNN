@@ -1,0 +1,68 @@
+/**
+ * @file CNN_RISCV.c
+ * @author Ravoahangy Christian
+ * @author Noizette Luc
+ * @brief File that define all the functions needed to make the CNN for the RISCV project
+ * @brief /!\ This is HLS function 
+ * @version 0.1
+ * @date 2019-18-01
+ * 
+ */
+
+#include "CNN_RISCV.h"
+#include "convolution.h"
+#include "softmax.h"
+#include "maxpool.h"
+#include "CNN_coefs_3x3.h"
+
+
+/**
+ * @brief Function used to make the CNN in preHLS version
+ * 
+ * @param imagePath 			: The path to the image file
+ * @param probabilitiesMatrix 	: The probabilities matrix
+ * @return int 					: 0 if no problem was found / -1 in the other case
+ */
+int CNN_HLS(IMG_RESIZE_OUT_TYPE imageResizeOut[], CNN_GLOBAL_TYPE CNNArray1[], CNN_GLOBAL_TYPE CNNArray2[])
+{
+	// 1st step : Convolution & RELU 1 : 
+	convolution(imageResizeOut, CNNArray1, conv1Biases, conv1Weights, 1);
+	/* cout << "Display of CNNOutputConv1 : " << endl;
+	displayMatrix1(CNNOutputConv1, 24,24,64,false,0); */
+
+	// 5th step : MaxPool 1 : 
+	maxpool(CNNArray1, CNNArray2, 1);
+	/* cout << "Display of CNNOutputMax1 : " << endl;
+	displayMatrix1(CNNOutputMax1, 12,12,64,false,0); */
+
+	// 6th step : Convolution & RELU 2 :
+	convolution(CNNArray2, CNNArray1, conv2Biases, conv2Weights, 2);
+	/* cout << "Display of CNNOutputConv2 : " << endl;
+	displayMatrix1(CNNOutputConv2, 12,12,32,false,0); */
+	
+	// 7th step : MaxPool 2 :
+	maxpool(CNNArray1, CNNArray2, 2);
+	/* cout << "Display of CNNOutputMax2 : " << endl;
+	displayMatrix1(CNNOutputMax2, 6,6,32,false,0); */
+
+	// 8th step : Convolution & RELU 3 :
+	convolution(CNNArray2, CNNArray1, conv3Biases, conv3Weights, 3);
+	/* cout << "Display of CNNOutputConv3 : " << endl;
+	displayMatrix1(CNNOutputConv3, 6,6,20,false,0); */
+	
+	// 9th step : MaxPool 3 :
+	maxpool(CNNArray1, CNNArray2, 3);
+	//cout << "Display of CNNOutputMax3 : " << endl;
+	/* for(int index = 0 ; index < 180 ; index++)
+	{
+		cout << "| " << CNNOutputMax3[index] << "\t| \n";
+	} */
+
+	// 10th step : Reshape
+	// No necessary in this architecure
+
+	// 11th step : Perceptron :
+	softmax(CNNArray2, CNNArray1, local3Weights, local3Biases);	
+
+	return 0;
+}

@@ -1,0 +1,5 @@
+# See LICENSE.Cambridge for license details.
+*.o
+*.su
+boot
+mmc.a

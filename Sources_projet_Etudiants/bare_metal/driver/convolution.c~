@@ -1,0 +1,115 @@
+/**
+ * @file convolution.c
+ * @author Ravoahangy Christian
+ * @author Noizette Luc
+ * @brief File that give the headers of all the function needed to make the convolution of the CNN for the RISCV project
+ * @brief /!\ This is HLS function 
+ * @version 0.1
+ * @date 2019-18-01
+ * 
+ */
+
+#include "convolution.h"
+
+
+/**
+ * @brief The function used to make the convolution
+ * 
+ * @param inputMatrix 			: The input matrix
+ * @param outputMatrix 			: The output matrix
+ * @param biasesMatrix 			: The biases matrix 
+ * @param weightsMatrix 		: The weights matrix 
+ * @param convolutionNumber 	: The number of the convolution in the CNN (1,2 or 3)
+ */
+ 
+ /*
+void convolution(CNN_GLOBAL_TYPE inputMatrix[], CNN_GLOBAL_TYPE outputMatrix[], COEFS_TYPE biasesMatrix[], COEFS_TYPE weightsMatrix[], int convolutionNumber)
+{
+	int outputMatrixWidht;
+	int outputMatrixHeight;
+	int outputMatrixDepth; 
+	int biasesMatrixSize;
+	int weightsMatrixWidht;
+	int weightsMatrixHeight;
+	int weightsMatrixDepth;
+	int weightsMatrixCanal;
+	if(convolutionNumber == 1)
+	{
+		outputMatrixWidht = CNN_CONV1_OUTPUT_WIDHT;
+		outputMatrixHeight = CNN_CONV1_OUTPUT_HEIGHT;
+		outputMatrixDepth = CNN_CONV1_OUTPUT_DEPTH;
+		biasesMatrixSize = CONV1_BIASES_SIZE;
+		weightsMatrixWidht = CONV1_WEIGHTS_WIDTH;
+		weightsMatrixHeight = CONV1_WEIGHTS_HEIGHT;
+		weightsMatrixDepth = CONV1_WEIGHTS_DEPTH;
+		weightsMatrixCanal = CONV1_WEIGHTS_CANAL;
+	}
+	if (convolutionNumber == 2)
+	{
+		outputMatrixWidht = CNN_CONV2_OUTPUT_WIDHT;
+		outputMatrixHeight = CNN_CONV2_OUTPUT_HEIGHT;
+		outputMatrixDepth = CNN_CONV2_OUTPUT_DEPTH;
+		biasesMatrixSize = CONV2_BIASES_SIZE;
+		weightsMatrixWidht = CONV2_WEIGHTS_WIDTH;
+		weightsMatrixHeight = CONV2_WEIGHTS_HEIGHT;
+		weightsMatrixDepth = CONV2_WEIGHTS_DEPTH;
+		weightsMatrixCanal = CONV2_WEIGHTS_CANAL;
+	}
+	if (convolutionNumber == 3)
+	{
+		outputMatrixWidht = CNN_CONV3_OUTPUT_WIDHT;
+		outputMatrixHeight = CNN_CONV3_OUTPUT_HEIGHT;
+		outputMatrixDepth = CNN_CONV3_OUTPUT_DEPTH;
+		biasesMatrixSize = CONV3_BIASES_SIZE;
+		weightsMatrixWidht = CONV3_WEIGHTS_WIDTH;
+		weightsMatrixHeight = CONV3_WEIGHTS_HEIGHT;
+		weightsMatrixDepth = CONV3_WEIGHTS_DEPTH;
+		weightsMatrixCanal = CONV3_WEIGHTS_CANAL;
+	}
+	
+	CNN_GLOBAL_TYPE sum, value;
+	double sum2,value2, imageValue, kernelValue;
+	int inputMatrixIndex, outputMatrixIndex, weightsMatrixIndex;
+	for(int j = 0 ; j < outputMatrixHeight ; j++)
+	{
+		for(int i = 0 ; i < outputMatrixWidht ; i++)
+		{
+			for(int c = 0 ; c < outputMatrixDepth ; c++)
+			{
+				sum = 0;
+				sum2 = 0;
+				for(int l = 0 ; l < weightsMatrixDepth ; l++)
+				{
+					for(int m = 0 ; m < weightsMatrixWidht ; m++)
+					{
+						for(int n = 0 ; n < weightsMatrixHeight ; n++)
+						{
+							// If pixel out of intputMatrix : 
+							if( !((j+(n-1)) < 0) && !((j+(n-1)) > (outputMatrixHeight-1)) && !((i+(m-1)) < 0) && !((i+(m-1)) > (outputMatrixWidht-1)) )
+							{
+								inputMatrixIndex = indexCalculation((i+(m-1)),(j+(n-1)),l,0,outputMatrixWidht, outputMatrixHeight, weightsMatrixDepth,1);
+								weightsMatrixIndex = indexCalculation(m,n,l,c,weightsMatrixWidht, weightsMatrixHeight, weightsMatrixDepth, weightsMatrixCanal);
+								imageValue = inputMatrix[inputMatrixIndex];
+								kernelValue = weightsMatrix[weightsMatrixIndex];
+								sum = sum + (inputMatrix[inputMatrixIndex] * weightsMatrix[weightsMatrixIndex]);
+								sum2 = sum;
+							}
+
+						}
+					}
+				}
+				outputMatrixIndex = indexCalculation(i,j,c,0,outputMatrixWidht, outputMatrixHeight, outputMatrixDepth,1);
+				value = sum + (CNN_GLOBAL_TYPE)biasesMatrix[c];
+				value2 = sum;
+				// RELU function integrated in the convolution function
+				if(value < 0)
+				{
+					value = 0;
+					value2 = 0;
+				}
+				outputMatrix[outputMatrixIndex] = value;
+			}
+		}
+	}
+};
+*/

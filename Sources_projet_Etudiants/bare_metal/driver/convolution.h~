@@ -1,0 +1,28 @@
+/**
+ * @file convolution.h
+ * @author Ravoahangy Christian
+ * @author Noizette Luc
+ * @brief File that give the headers of all the function needed to make the convolution
+ * @brief /!\ This is RISCV function 
+ * @version 0.1
+ * @date 2019-16-01
+ * 
+ */
+
+#ifndef CONVOLUTION_H
+#define CONVOLUTION_H
+
+#include "macro_CNN_RISCV.h"
+
+/**
+ * @brief The function used to make the convolution
+ * 
+ * @param inputMatrix 			: The input matrix
+ * @param outputMatrix 			: The output matrix
+ * @param biasesMatrix 			: The biases matrix 
+ * @param weightsMatrix 		: The weights matrix 
+ * @param convolutionNumber 	: The number of the convolution in the CNN (1,2 or 3)
+ */
+void convolution(CNN_GLOBAL_TYPE inputMatrix[], CNN_GLOBAL_TYPE outputMatrix[], COEFS_TYPE biasesMatrix[], COEFS_TYPE weightsMatrix[], int convolutionNumber);
+
+#endif /* CONVOLUTION_H */

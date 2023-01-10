@@ -1,0 +1,128 @@
+Start resize of image  >>    1
+Start normalize of image  >>    1
+airplane : 10 
+automobile : 32 
+bird : 5 
+cat : 32 
+deer : 24 
+dog : -7 
+frog : -11 
+horse : 3 
+ship : 47 
+truck : 151 
+----->>> The image type is Truck with a probability of : 151 
+
+Start resize of image  >>    2
+Start normalize of image  >>    2
+airplane : 15 
+automobile : -22 
+bird : 89 
+cat : 37 
+deer : 62 
+dog : 13 
+frog : 28 
+horse : 38 
+ship : 8 
+truck : 15 
+----->>> The image type is Bird with a probability of : 89 
+
+Start resize of image  >>    3
+Start normalize of image  >>    3
+airplane : 19 
+automobile : 45 
+bird : 58 
+cat : 24 
+deer : 24 
+dog : -20 
+frog : 16 
+horse : 7 
+ship : 20 
+truck : 119 
+----->>> The image type is Truck with a probability of : 119 
+
+Start resize of image  >>    4
+Start normalize of image  >>    4
+airplane : 43 
+automobile : 103 
+bird : -3 
+cat : 13 
+deer : 8 
+dog : 6 
+frog : -24 
+horse : -15 
+ship : 49 
+truck : 94 
+----->>> The image type is Automobile with a probability of : 103 
+
+
+Start resize of image  >>    5
+Start normalize of image  >>    5
+airplane : 29 
+automobile : 53 
+bird : 11 
+cat : 44 
+deer : 8 
+dog : -6 
+frog : -10 
+horse : 7 
+ship : 66 
+truck : 131 
+----->>> The image type is Truck with a probability of : 131 
+
+Start resize of image  >>    6
+Start normalize of image  >>    6
+airplane : 27 
+automobile : 46 
+bird : 12 
+cat : 45 
+deer : 28 
+dog : -6 
+frog : -1 
+horse : -4 
+ship : 47 
+truck : 137 
+----->>> The image type is Truck with a probability of : 137 
+
+Start resize of image  >>    7
+Start normalize of image  >>    7
+airplane : 41 
+automobile : 114 
+bird : -19 
+cat : 12 
+deer : -14 
+dog : 6 
+frog : -26 
+horse : 6 
+ship : 50 
+truck : 154 
+----->>> The image type is Truck with a probability of : 154 
+
+Start resize of image  >>    8
+Start normalize of image  >>    8
+airplane : -1 
+automobile : -11 
+bird : 51 
+cat : 41 
+deer : 76 
+dog : 17 
+frog : 11 
+horse : 36 
+ship : -2 
+truck : 60 
+----->>> The image type is Deer with a probability of : 76 
+
+Start resize of image  >>    9
+Start normalize of image  >>    9
+airplane : 16 
+automobile : 1 
+bird : 50 
+cat : 43 
+deer : 52 
+dog : 5 
+frog : 22 
+horse : 33 
+ship : 6 
+truck : 71 
+----->>> The image type is Truck with a probability of : 71 
+
+Start resize of image  >>    10

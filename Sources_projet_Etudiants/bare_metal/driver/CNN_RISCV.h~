@@ -1,0 +1,27 @@
+/**
+ * @file CNN_RISCV.h
+ * @author Ravoahangy Christian
+ * @author Noizette Luc
+ * @brief File that give the header of the function needed to make the CNN for the RISCV project
+ * @brief /!\ This is RISCV function 
+ * @version 0.1
+ * @date 2019-18-01
+ * 
+ */
+
+#ifndef CNN_HLS_RISCV_H
+#define CNN_HLS_RISCV_H
+
+#include "macro_CNN_RISCV.h"
+
+/**
+ * @brief Function used to make the CNN in HLS version
+ * 
+ * @param imageResizeOut 		: The pointer to the array of the resize image
+ * @param CNNArray1 			: The pointer to work array 1 of the CNN
+ * @param CNNArray2 			: The pointer to work array 2 of the CNN
+ * @return int 					: 0 if no problem was found / -1 in the other case
+ */
+int CNN_RISCV(IMG_RESIZE_OUT_TYPE imageResizeOut[], CNN_GLOBAL_TYPE CNNArray1[], CNN_GLOBAL_TYPE CNNArray2[]);
+
+#endif /* CNN_HLS_RISCV_H */

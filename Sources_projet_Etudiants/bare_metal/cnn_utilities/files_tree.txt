@@ -1,0 +1,28 @@
+├── boot.bin
+├── image_outputs
+│   ├── 10.ppm
+│   ├── 11.ppm
+│   ├── 12.ppm
+│   ├── 13.ppm
+│   ├── 14.ppm
+│   ├── 1.ppm
+│   ├── 2.ppm
+│   ├── 3.ppm
+│   ├── 4.ppm
+│   ├── 5.ppm
+│   ├── 6.ppm
+│   ├── 7.ppm
+│   ├── 8.ppm
+│   └── 9.ppm
+├── sample_outputs_ppm
+│   ├── 1.ppm
+│   ├── 2.ppm
+│   ├── 3.ppm
+│   ├── 4.ppm
+│   ├── 5.ppm
+│   ├── 6.ppm
+│   └── 7.ppm
+├── System Volume Information
+│   ├── IndexerVolumeGuid
+│   └── WPSettings.dat
+└── test.txt
