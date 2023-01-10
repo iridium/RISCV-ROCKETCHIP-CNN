@@ -24,7 +24,6 @@
 // Including paramter (sizes, images to read, number of filters ...)
 #include "date2020_config.h"
 
-
 extern unsigned char OVERLAYS_LIST[];
 //-----------------------------
 
