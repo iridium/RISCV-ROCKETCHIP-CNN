@@ -722,7 +722,7 @@ void display(int img_in_number, filter_type filter_nb, uint8_t previous_imageSel
   {
 
   case BYPASS:
-    on_screen( BYPASS );
+    on_screen( BYPASS, , ptr_selected_img_filtered );
     break;
 
   case EDGE_DETECTOR:
