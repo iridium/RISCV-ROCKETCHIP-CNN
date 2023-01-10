@@ -664,7 +664,7 @@ int perform_cnn(int img_in_number)	//fonction top du CNN
   uint8_t *source_img;
   
   // Load the 640*480 PPM image
-  source_img = ... ;
+  source_img = .... ;
 
   // Resize to a 24*24 RGB img.
   DEBUG_PRINTF("Starting resizing");
