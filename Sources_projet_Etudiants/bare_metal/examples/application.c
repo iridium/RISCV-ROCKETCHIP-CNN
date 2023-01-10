@@ -59,7 +59,7 @@ FATFS FatFs; // Work area (file system object) for logical drive
 
 
 /* Les fonctions suivantes ont ete ajoutees dans ce fichier car nous n'avons pas reussi a les inclures depuis les fichiers du RISC-V */
-/* Fonction servant √† ajouter une chaine de caractere a une autre */
+/* Fonction servant ‡ ajouter une chaine de caractere a une autre */
 char *My_strcat(char *dest, const char *src)
 {
   char *tmp = dest;
@@ -124,7 +124,7 @@ size_t My_strspn(const char *s, const char *accept)
 /* Variable globale utilisee par My_strtok stockant les token suivants */
 char *___mystrtok;
 
-/* Fonction permettant de s√©parer une chaine de caractere en differents token stockes dans __strtok 
+/* Fonction permettant de sÈparer une chaine de caractere en differents token stockes dans __strtok 
    Utilisation : Token = strtok(chaine de caractere, separateur)
                  Token suivant = strtok(NULL, separateur) */
 char *My_strtok(char *s, const char *ct)
@@ -174,7 +174,7 @@ uint8_t TAB_GS[NB_IMAGES_TO_BE_READ][DISPLAY_IMAGE_SIZE] = {0};          //Table
 uint8_t TAB_GS_FILTERED[NB_IMAGES_TO_BE_READ][DISPLAY_IMAGE_SIZE] = {0}; //Tableau de pixel de toutes les images rangeais les uns apres les autres
 
 // CNN Stuff --------------------------------------------------------------------
-// Tableau de pixel de toutes les images rang√©s les uns apres les autres
+// Tableau de pixel de toutes les images rangÈs les uns apres les autres
 uint8_t global_tab[NB_IMAGES_TO_BE_READ * DISPLAY_IMAGE_SIZE * 3] = {0};
 
 uint8_t resized_img[NN_IN_SIZE * 3] = {0};
@@ -215,49 +215,32 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 
 
     //Generation du nom de fichier
-    //sprintf( ..., "%d.ppm", ... );
-    sprintf( file_name, "%d.ppm", n_image );
+    sprintf( ..., "%d.ppm", ... );
 
     // Open a file
-    //printf("Loading %s\n", ... );
-    //fr = f_open( ... , ... , FA_READ);
-    printf("Loading %s\n", file_name );
-    fr = f_open( &fil , file_name , FA_READ);
+    printf("Loading %s\n", ... );
+    fr = f_open( ... , ... , FA_READ);
     if (fr)
     {
-      printf("Failed to open %s!\n",  file_name );
+      printf("Failed to open %s!\n", ... );
       return 0;
     }
 
     //Lecture de l'entete
-    //fr = f_read( &fil , &c1, 1, ... );
-    //fr = f_read( &fil , &c2, 1, ... );
-    fr = f_read( &fil , &c1, 1, &br );
-    fr = f_read( &fil , &c2, 1, &br );
+    fr = f_read( ... , &c1, 1, ... );
+    fr = f_read( ... , &c2, 1, ... );
 
     //Si l'entete vaut les caracteres 'P3' alors, on est dans le cas d'un fichier ppm
     if (c1 == 0x50 && c2 == 0x33)
     {
-      //printf("Le fichier %s est un fichier ppm P3.\n", ... );
-      //plop = f_gets(text, 10000, ... );
-      //plop = f_gets(text, 10000, ... );
-      printf("Le fichier %s est un fichier ppm P3.\n", file_name );
-      plop = f_gets(text, 10000, &fil );
-      plop = f_gets(text, 10000, &fil );
+      printf("Le fichier %s est un fichier ppm P3.\n", ... );
+      plop = f_gets(text, 10000, ... );
+      plop = f_gets(text, 10000, ... );
       if (text[0] == '#')
       { // test ligne de commentaire de openCV
         plop = f_gets(text, 10000, &fil);
       }
-      //strToken = ...(text, " ");					//Utilisation des fonctions sur les cha√Ænes de caract√®res d√©crites plus haut
-      //length = ...(strToken); //Lecture de la longueur de l'image
-      //strToken = ...(NULL, "\n");
-      //width = ...(strToken); //Lecture de la largeur de l'image
-      //size = length * width;
-      //tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues 
-      //tab_length[...] = length;
-      //tab_size[...] = size;
-      
-      strToken = ...(text, " ");					//Utilisation des fonctions sur les cha√Ænes de caract√®res d√©crites plus haut
+      strToken = ...(text, " ");					//Utilisation des fonctions sur les chaÓnes de caractËres dÈcrites plus haut
       length = ...(strToken); //Lecture de la longueur de l'image
       strToken = ...(NULL, "\n");
       width = ...(strToken); //Lecture de la largeur de l'image
@@ -289,7 +272,7 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
           i++;
           strToken = ...(NULL, " "); //On selectionne le token suivant
           if (strToken[0] == '\n')
-          { // On enl√®ve les caract√®re de saut de ligne '\n'
+          { // On enlËve les caractËre de saut de ligne '\n'
             strToken = NULL;
           }
         }
@@ -432,27 +415,27 @@ void external_interrupt(void)
   if(isBouncing == 0)
   {
     // printf("Interrupt executed !\n");
-  	// If BTNW :									//Si pression du bouton Ouest, d√©cr√©mentation de la variable de s√©lection de l'image
-  	if (claim == 1)									//Mise √† sa valeur max si elle atteint sa valeur min
+  	// If BTNW :									//Si pression du bouton Ouest, dÈcrÈmentation de la variable de sÈlection de l'image
+  	if (claim == 1)									//Mise ‡ sa valeur max si elle atteint sa valeur min
   	{
   		... ;
   		if( ... ) ... ;
     }
-  	// If BTNE :									//Si pression du bouton Est, incr√©mentation de la variable de s√©lection de l'image
-  	else if (claim == 2)								//Mise √† sa valeur min si elle atteint sa valeur max
+  	// If BTNE :									//Si pression du bouton Est, incrÈmentation de la variable de sÈlection de l'image
+  	else if (claim == 2)								//Mise ‡ sa valeur min si elle atteint sa valeur max
   	{
       		... ;
       if( ... )
         ... ;
   	}
-  	// If BTNS :									//Si pression du bouton Sud, d√©cr√©mentation de la variable de s√©lection du filtre
-  	else if (claim == 3)								//Mise √† sa valeur max si elle atteint sa valeur min
+  	// If BTNS :									//Si pression du bouton Sud, dÈcrÈmentation de la variable de sÈlection du filtre
+  	else if (claim == 3)								//Mise ‡ sa valeur max si elle atteint sa valeur min
   	{
   		... ;
   		if( ... ) ... ;
   	}
-  	// If BTNN :									//Si pression du bouton Nord, incr√©mentation de la variable de s√©lection du filtre
-  	else if (claim == 4)								//Mise √† sa valeur min si elle atteint sa valeur max
+  	// If BTNN :									//Si pression du bouton Nord, incrÈmentation de la variable de sÈlection du filtre
+  	else if (claim == 4)								//Mise ‡ sa valeur min si elle atteint sa valeur max
   	{
       		...;
   	}
@@ -662,7 +645,7 @@ void img_to_tensor(float *target_tensor, uint8_t *source_img, int source_size, i
 
 
 
-//Cette fonction a √©t√© retir√©e de votre template, mais vous pouvez vous en inspirer pour √©crire la votre
+//Cette fonction a ÈtÈ retirÈe de votre template, mais vous pouvez vous en inspirer pour Ècrire la votre
 /*extern void top_cnn_mancini(coef_type tab_coeffs[NB_COEFFS], coef_type tab_biais[NB_BIAIS], led_type cifar_class[1], image_type image_in[CONV_SIZE_1 * CONV_SIZE_1 * 3], image_type cifar_probabilities[NCAN_OUT_5]);*/  
 
 
@@ -735,7 +718,7 @@ void display(int img_in_number, filter_type filter_nb, uint8_t previous_imageSel
 
   int x, y;
 
-  switch (filter_nb)				//Disjonction de cas en fonction du filtre s√©lectionn√©
+  switch (filter_nb)				//Disjonction de cas en fonction du filtre sÈlectionnÈ
   {
 
   case BYPASS:
@@ -777,10 +760,10 @@ void on_screen(int mode, int class, uint8_t *img)
   volatile uint64_t *ptr_image = (uint64_t *)(img);
   volatile uint64_t *ptr_labels_overlay = (uint64_t *)(OVERLAYS_LIST);
 
-  if (mode == BYPASS)										//S√©lection de l'√©tiquette en fonction du filtre choisi
+  if (mode == BYPASS)										//SÈlection de l'Ètiquette en fonction du filtre choisi
   {
     printf("\nPainting BYPASS overlay.\n");
-    //L'image √† l'indice 10 correspond √† l'overlay du bypass
+    //L'image ‡ l'indice 10 correspond ‡ l'overlay du bypass
     ptr_labels_overlay = ... ; // on decale pour sauter les etiquettes des classes du CNN
     y_offset = 0;
     x_offset = 0;
@@ -788,7 +771,7 @@ void on_screen(int mode, int class, uint8_t *img)
   else if (mode == CNN_CLASSIFIER)
   {
     printf("\nPainting CNN CLASS overlay\n");
-    //L'image aux indices 0 √† 9 correspondent aux overlays des diff√©rentes classes du CNN
+    //L'image aux indices 0 ‡ 9 correspondent aux overlays des diffÈrentes classes du CNN
     ptr_labels_overlay = ... ;
     y_offset = 0;
     x_offset = 0;
@@ -796,7 +779,7 @@ void on_screen(int mode, int class, uint8_t *img)
   else if (mode == EDGE_DETECTOR)
   {
     printf("\nPainting the FILTER overlay\n");
-    //L'image √† l'indice 11 correspond √† l'overlay du edge detector
+    //L'image ‡ l'indice 11 correspond ‡ l'overlay du edge detector
     ptr_labels_overlay = ... ; //apres les etiquettes des classes
     y_offset = 0;
     x_offset = 0;
@@ -874,7 +857,7 @@ int main(void)
   // All images loaded, grayscale conversion now.
 
   // Start the application: {filtering | no filtering} + on_screen
-  for ( ... )				//Pour chaque image de global_tab, appliquer le greyscale et stocker le r√©sultat dans TAB_GS 
+  for ( ... )				//Pour chaque image de global_tab, appliquer le greyscale et stocker le rÈsultat dans TAB_GS 
   {
     ... ;  
   }
@@ -909,7 +892,7 @@ int main(void)
 
   while (1)
   {
-    if ( ... )    //Comparaison des valeurs courantes et pr√©c√©dentes des variables de s√©lection de l'image et du filtre
+    if ( ... )    //Comparaison des valeurs courantes et prÈcÈdentes des variables de sÈlection de l'image et du filtre
     {
       if ( ... )
       {
@@ -917,9 +900,9 @@ int main(void)
         CNNDone = 0;
       }
 
-      display( ... );		//Si diff√©rence, maise √† jour de l'affichage
+      display( ... );		//Si diffÈrence, maise ‡ jour de l'affichage
 
-      ... ;						//Mise √† jour de des valeurs de previous_imageSel et previous_filterSel en fonction des valeurs courantes
+      ... ;						//Mise ‡ jour de des valeurs de previous_imageSel et previous_filterSel en fonction des valeurs courantes
       ... ;
     }
 
