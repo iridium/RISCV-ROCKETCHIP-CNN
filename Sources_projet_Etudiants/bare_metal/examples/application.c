@@ -608,7 +608,7 @@ void my_resizing(uint8_t *target_img, uint8_t *source_img, int source_size, int 
   double temp = 0.0;
   int w = 0;
 
-	...
+	
 }
 
 
