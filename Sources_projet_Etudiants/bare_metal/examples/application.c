@@ -215,31 +215,48 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 
 
     //Generation du nom de fichier
-    sprintf( ..., "%d.ppm", ... );
+    //sprintf( ..., "%d.ppm", ... );
+    sprintf( file_name, "%d.ppm", n_image );
 
     // Open a file
-    printf("Loading %s\n", ... );
-    fr = f_open( ... , ... , FA_READ);
+    //printf("Loading %s\n", ... );
+    //fr = f_open( ... , ... , FA_READ);
+    printf("Loading %s\n", file_name );
+    fr = f_open( &fil , file_name , FA_READ);
     if (fr)
     {
-      printf("Failed to open %s!\n", ... );
+      printf("Failed to open %s!\n",  file_name );
       return 0;
     }
 
     //Lecture de l'entete
-    fr = f_read( ... , &c1, 1, ... );
-    fr = f_read( ... , &c2, 1, ... );
+    //fr = f_read( &fil , &c1, 1, ... );
+    //fr = f_read( &fil , &c2, 1, ... );
+    fr = f_read( &fil , &c1, 1, &br );
+    fr = f_read( &fil , &c2, 1, &br );
 
     //Si l'entete vaut les caracteres 'P3' alors, on est dans le cas d'un fichier ppm
     if (c1 == 0x50 && c2 == 0x33)
     {
-      printf("Le fichier %s est un fichier ppm P3.\n", ... );
-      plop = f_gets(text, 10000, ... );
-      plop = f_gets(text, 10000, ... );
+      //printf("Le fichier %s est un fichier ppm P3.\n", ... );
+      //plop = f_gets(text, 10000, ... );
+      //plop = f_gets(text, 10000, ... );
+      printf("Le fichier %s est un fichier ppm P3.\n", file_name );
+      plop = f_gets(text, 10000, &fil );
+      plop = f_gets(text, 10000, &fil );
       if (text[0] == '#')
       { // test ligne de commentaire de openCV
         plop = f_gets(text, 10000, &fil);
       }
+      //strToken = ...(text, " ");					//Utilisation des fonctions sur les chaînes de caractères décrites plus haut
+      //length = ...(strToken); //Lecture de la longueur de l'image
+      //strToken = ...(NULL, "\n");
+      //width = ...(strToken); //Lecture de la largeur de l'image
+      //size = length * width;
+      //tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues 
+      //tab_length[...] = length;
+      //tab_size[...] = size;
+      
       strToken = ...(text, " ");					//Utilisation des fonctions sur les chaînes de caractères décrites plus haut
       length = ...(strToken); //Lecture de la longueur de l'image
       strToken = ...(NULL, "\n");
