@@ -764,7 +764,7 @@ void on_screen(int mode, int class, uint8_t *img)
   {
     printf("\nPainting BYPASS overlay.\n");
     //L'image à l'indice 10 correspond à l'overlay du bypass
-    ptr_labels_overlay = ptr_labels_overlay + 10 ; // on decale pour sauter les etiquettes des classes du CNN
+    ptr_labels_overlay = ptr_labels_overlay + 10*OVERLAY_WIDTH*OVERLAY_HEIGHT/8; // on decale pour sauter les etiquettes des classes du CNN
     y_offset = 0;
     x_offset = 0;
   }
@@ -772,7 +772,7 @@ void on_screen(int mode, int class, uint8_t *img)
   {
     printf("\nPainting CNN CLASS overlay\n");
     //L'image aux indices 0 à 9 correspondent aux overlays des différentes classes du CNN
-    ptr_labels_overlay = ptr_labels_overlay + class ;
+    ptr_labels_overlay = ptr_labels_overlay + class*OVERLAY_WIDTH*OVERLAY_HEIGHT/8 ;
     y_offset = 0;
     x_offset = 0;
   }
@@ -780,7 +780,7 @@ void on_screen(int mode, int class, uint8_t *img)
   {
     printf("\nPainting the FILTER overlay\n");
     //L'image à l'indice 11 correspond à l'overlay du edge detector
-    ptr_labels_overlay = ptr_labels_overlay + 11 ; //apres les etiquettes des classes
+    ptr_labels_overlay = ptr_labels_overlay + 11*OVERLAY_WIDTH*OVERLAY_HEIGHT/8 ; //apres les etiquettes des classes
     y_offset = 0;
     x_offset = 0;
   }
