@@ -602,13 +602,28 @@ double __ieee754_sqrt(double x)
 
 
 // This use the AREA based resizing method, just like the one used in OpenCV
-void my_resizing(uint8_t *target_img, uint8_t *source_img, int source_size, int source_sizeX, int source_sizeY,   //Conversion d'une image 640*480 vers 24*24
-                 int target_size, int target_sizeX, int target_sizeY)
+void my_resizing(uint8_t* target_img, uint8_t* source_img, int source_size, int source_sizeX, int source_sizeY, int target_size, int target_sizeX, int target_sizeY)
 {
-  double temp = 0.0;
-  int w = 0;
-
-	
+  double x_ratio = (double) source_sizeX / target_sizeX;
+  double y_ratio = (double) source_sizeY / target_sizeY;
+  for (int y = 0; y < target_sizeY; y++) {
+    for (int x = 0; x < target_sizeX; x++) {
+      int x2 = (int) (x * x_ratio);
+      int y2 = (int) (y * y_ratio);
+      double x_diff = (x * x_ratio) - x2;
+      double y_diff = (y * y_ratio) - y2;
+      for (int k = 0; k < 3; k++) {
+          int index1 = source_sizeX * y2 + x2 + source_size/3 * k;
+          int index2 = source_sizeX * y2 + x2 + 1 + source_size/3 * k;
+          int index3 = source_sizeX * (y2 + 1) + x2 + source_size/3 * k;
+          int index4 = source_sizeX * (y2 + 1) + x2 + 1 + source_size/3 * k;
+          double v1 = source_img[index1] * (1 - x_diff) + source_img[index2] * x_diff;
+          double v2 = source_img[index3] * (1 - x_diff) + source_img[index4] * x_diff;
+          int index = target_sizeX * y + x + target_size/3 * k;
+          target_img[index] = (uint8_t) (v1 * (1 - y_diff) + v2 * y_diff);
+      }
+    }
+  }
 }
 
 
