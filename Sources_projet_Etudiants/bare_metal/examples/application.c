@@ -354,7 +354,7 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 	//free(...);
 	//free(...);
 	//free(...);
-	
+
 	free(plop);
 	free(strToken);
 	free(text);
@@ -368,11 +368,17 @@ void convert_to_greyscale(int n_image, int *tab_size, int *tab_width, int *tab_l
 {
 	printf("Affichage image numero : %d   %d*%d=%d\n", n_image, tab_width[n_image - 1], tab_length[n_image - 1], tab_size[n_image - 1]);
 	//Transformation Greyscale
-	for (int i = 0; i < tab_size[n_image - 1] * 3; i += 3)
-	{
+	//for (int i = 0; i < tab_size[n_image - 1] * 3; i += 3)
+	//{
 		//For each pixel on R, G et B                  //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
-		...
-	}
+	//	...
+	//}
+  for (int i = 0; i < tab_size[n_image - 1] * 3; i ++)
+	{
+		//For each pixel on R, G et B
+    //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
+		image[i] =  0.3*global_tab[i] + 0.57*global_tab[CONV_READ_SIZE_PGM  + i] + 0.11*global_tab[CONV_READ_SIZE_PGM*2  + i] ;
+	}               //R                       //G                                    //B
 }
 
 
@@ -2384,7 +2390,7 @@ size_t My_strspn(const char *s, const char *accept)
 /* Variable globale utilisee par My_strtok stockant les token suivants */
 char *___mystrtok;
 
-/* Fonction permettant de séparer une chaine de caractere en differents token stockes dans __strtok 
+/* Fonction permettant de séparer une chaine de caractere en differents token stockes dans __strtok
    Utilisation : Token = strtok(chaine de caractere, separateur)
                  Token suivant = strtok(NULL, separateur) */
 char *My_strtok(char *s, const char *ct)
@@ -2513,16 +2519,16 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
       //strToken = ...(NULL, "\n");
       //width = ...(strToken); //Lecture de la largeur de l'image
       //size = length * width;
-      //tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues 
+      //tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues
       //tab_length[...] = length;
       //tab_size[...] = size;
-      
+
       strToken = ...(text, " ");					//Utilisation des fonctions sur les chaînes de caractères décrites plus haut
       length = ...(strToken); //Lecture de la longueur de l'image
       strToken = ...(NULL, "\n");
       width = ...(strToken); //Lecture de la largeur de l'image
       size = length * width;
-      tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues 
+      tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues
       tab_length[...] = length;
       tab_size[...] = size;
       for (i = 0; i < size; i++)					//initialisation du tableau pixel
@@ -2555,7 +2561,7 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
         }
       }
     }
-   
+
     printf("n_image = %d\n", n_image);
     for (i = 0; i < size * 3; i++)
     {
@@ -2674,7 +2680,7 @@ void enable_plic_interrupts()
 
 
 volatile int imageSel;
-volatile int filterSel; 
+volatile int filterSel;
 volatile int isBouncing;
 
 
@@ -2683,10 +2689,10 @@ void external_interrupt(void)
   int claim = 0;
 #ifdef VERBOSE
   //printf("Hello external interrupdet! "__TIMESTAMP__"\n");
-#endif  
-  
+#endif
+
   // Read the ID (the highest priority pending interrupt)
-  // If the value we read is zero then no pending interrupt is coming from PLIC 
+  // If the value we read is zero then no pending interrupt is coming from PLIC
   claim = plic[ ... ]; 									//consulter le fichier syscall.c
   clear_csr(mie, MIP_MEIP);
   if(isBouncing == 0)
@@ -2718,12 +2724,12 @@ void external_interrupt(void)
   	}
   	isBouncing = 1;
   }
-  
+
   // Write the ID of the interrupt source to the claim/complete register to complete the interrupt
-  // The PLIC will clear the pending bit of the corresponding ID 
+  // The PLIC will clear the pending bit of the corresponding ID
   // /!\ If the ID don't match the pending ID, the completion is silently ignored
   plic[ ... ] = claim;
-  set_csr(mie, MIP_MEIP); 
+  set_csr(mie, MIP_MEIP);
 }
 
 
@@ -2912,7 +2918,7 @@ float *normalizing_tensor(float *target_tensor, float *source_tensor, int size) 
 
 
 /*
-  Converting an RGB image to a tensor, 
+  Converting an RGB image to a tensor,
     i.e. R0R1R2......G0G1G2........B0B1B2......
 */
 void img_to_tensor(float *target_tensor, uint8_t *source_img, int source_size, int source_sizeX, int source_sizeY)
@@ -2923,7 +2929,7 @@ void img_to_tensor(float *target_tensor, uint8_t *source_img, int source_size, i
 
 
 //Cette fonction a été retirée de votre template, mais vous pouvez vous en inspirer pour écrire la votre
-/*extern void top_cnn_mancini(coef_type tab_coeffs[NB_COEFFS], coef_type tab_biais[NB_BIAIS], led_type cifar_class[1], image_type image_in[CONV_SIZE_1 * CONV_SIZE_1 * 3], image_type cifar_probabilities[NCAN_OUT_5]);*/  
+/*extern void top_cnn_mancini(coef_type tab_coeffs[NB_COEFFS], coef_type tab_biais[NB_BIAIS], led_type cifar_class[1], image_type image_in[CONV_SIZE_1 * CONV_SIZE_1 * 3], image_type cifar_probabilities[NCAN_OUT_5]);*/
 
 
 int perform_cnn(int img_in_number)	//fonction top du CNN
@@ -2939,7 +2945,7 @@ int perform_cnn(int img_in_number)	//fonction top du CNN
 
   // Allocate memory for intermediate images/tensors
   uint8_t *source_img;
-  
+
   // Load the 640*480 PPM image
   source_img = ... ;
 
@@ -3117,14 +3123,16 @@ int main(void)
   printf("Number of images to read : %d,    MIN = %d    MAX = %d\n", NB_IMAGES_TO_BE_READ, MIN_IMAGES_TO_READ, MAX_IMAGES_TO_READ);
 
   // MIN and MAX are included
-  for ( ... )				// Lire chaque image et les stocker dans global_tab
-  {
-    
-    ... ;
+  int r;
+	for (r = n_image; r <= NB_IMAGES_TO_BE_READ; r++)				// Lire chaque image et les stocker dans global_tab
+	{
 
-  }
+		read_pic(r, tab_size[r-1],tab_width[r-1],tab_[r-1], global_tab);
 
-  
+	}
+
+
+
   if (f_mount(NULL, "", 1))
   { // unmount it
     printf("fail to umount disk!");
@@ -3134,9 +3142,9 @@ int main(void)
   // All images loaded, grayscale conversion now.
 
   // Start the application: {filtering | no filtering} + on_screen
-  for ( ... )				//Pour chaque image de global_tab, appliquer le greyscale et stocker le résultat dans TAB_GS 
+  for ( ... )				//Pour chaque image de global_tab, appliquer le greyscale et stocker le résultat dans TAB_GS
   {
-    ... ;  
+    ... ;
   }
 
   // FILTERING STUFF
