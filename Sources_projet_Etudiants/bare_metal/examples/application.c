@@ -3,6 +3,8 @@
 //#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <memory.h>
+#include <math.h>
 #include "../driver/encoding.h"
 #include "../driver/mini-printf.h"
 #include "../driver/diskio.h"
