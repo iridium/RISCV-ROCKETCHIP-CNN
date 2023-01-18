@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "top_cnn_mancini.h": "c",
-        "biases_cifar.h": "c",
-        "types.h": "c",
-        "lowrisc_memory_map.h": "c",
-        "date2020_config.h": "c"
-    }
-}
