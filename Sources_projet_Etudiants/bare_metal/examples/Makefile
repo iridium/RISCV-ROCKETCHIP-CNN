@@ -115,16 +115,18 @@ MY_APPLICATION_C_FILES = lib/strto.c  lib/time.c  lib/div64.c  lib/ctype.c   dri
 drivers/mmc/mmc.c lib/string.c  lib/display_options.c ../driver/mini-printf.c ../driver/hid.c ../driver/logo.c ../driver/syscalls.c application.c ../driver/ff.c \
 ../driver/memory.c ../driver/sdhci-minion-hash-md5.c ../driver/elf.c ../driver/ethlib.c ../driver/dhcp-client.c ../driver/random.c 
 
-CNN_RISCV_MANCINI = 		../cnn_riscv_mancini/src/top_cnn_mancini.c \
-							../cnn_riscv_mancini/src/flush_mem.c \
-							../cnn_riscv_mancini/src/convolution.c \
-							../cnn_riscv_mancini/src/maxpool.c \
-							../cnn_riscv_mancini/src/reshape.c \
-							../cnn_riscv_mancini/src/perceptron.c \
-							../cnn_riscv_mancini/src/argmax.c \
-							../cnn_riscv_mancini/src/overlays.c
+# CNN_RISCV_MANCINI = 		../cnn_riscv_mancini/src/top_cnn_mancini.c \
+# 							../cnn_riscv_mancini/src/flush_mem.c \
+# 							../cnn_riscv_mancini/src/convolution.c \
+# 							../cnn_riscv_mancini/src/maxpool.c \
+# 							../cnn_riscv_mancini/src/reshape.c \
+# 							../cnn_riscv_mancini/src/perceptron.c \
+# 							../cnn_riscv_mancini/src/argmax.c \
+# 							../cnn_riscv_mancini/src/overlays.c
+CNN_RISCV_MANCINI = 
 
-CNN_RISCV_MANCINI_INCLUDE = ../cnn_riscv_mancini/include
+# CNN_RISCV_MANCINI_INCLUDE = ../cnn_riscv_mancini/include
+CNN_RISCV_MANCINI_INCLUDE = 
 
 APPLICATION_O_FILES = crt.o blk_legacy.o ctype.o display_options.o div64.o elf.o ff.o hid.o logo.o lowrisc_mmc.o memory.o mini-printf.o \
       mmc_legacy.o mmc.o sdhci-minion-hash-md5.o string.o strto.o syscalls.o time.o ethlib.o dhcp-client.o random.o \
