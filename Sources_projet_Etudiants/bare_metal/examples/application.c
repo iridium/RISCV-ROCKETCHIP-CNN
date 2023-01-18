@@ -61,63 +61,63 @@ FATFS FatFs; // Work area (file system object) for logical drive
 /* Fonction servant à ajouter une chaine de caractere a une autre */
 char *My_strcat(char *dest, const char *src)
 {
-  char *tmp = dest;
+	char *tmp = dest;
 
-  while (*dest)
-    dest++;
-  while ((*dest++ = *src++) != '\0')
-    ;
+	while (*dest)
+		dest++;
+	while ((*dest++ = *src++) != '\0')
+		;
 
-  return tmp;
+	return tmp;
 }
 
 /* Fonction servant a transformer un caractere en chiffre (dans les cas ou c'est possible) */
 int My_atoi(char *chaine)
 {
-  int res = 0;
-  int i;
-  for (i = 0; chaine[i] != '\0'; i++)
-  {
-    res = res * 10 + chaine[i] - '0';
-  }
-  return res;
+	int res = 0;
+	int i;
+	for (i = 0; chaine[i] != '\0'; i++)
+	{
+		res = res * 10 + chaine[i] - '0';
+	}
+	return res;
 }
 
 /* Fonctions utilisees par My_strtok */
 char *My_strpbrk(const char *cs, const char *ct)
 {
-  const char *sc1, *sc2;
+	const char *sc1, *sc2;
 
-  for (sc1 = cs; *sc1 != '\0'; ++sc1)
-  {
-    for (sc2 = ct; *sc2 != '\0'; ++sc2)
-    {
-      if (*sc1 == *sc2)
-        return (char *)sc1;
-    }
-  }
-  return NULL;
+	for (sc1 = cs; *sc1 != '\0'; ++sc1)
+	{
+		for (sc2 = ct; *sc2 != '\0'; ++sc2)
+		{
+			if (*sc1 == *sc2)
+				return (char *)sc1;
+		}
+	}
+	return NULL;
 }
 
 size_t My_strspn(const char *s, const char *accept)
 {
-  const char *p;
-  const char *a;
-  size_t count = 0;
+	const char *p;
+	const char *a;
+	size_t count = 0;
 
-  for (p = s; *p != '\0'; ++p)
-  {
-    for (a = accept; *a != '\0'; ++a)
-    {
-      if (*p == *a)
-        break;
-    }
-    if (*a == '\0')
-      return count;
-    ++count;
-  }
+	for (p = s; *p != '\0'; ++p)
+	{
+		for (a = accept; *a != '\0'; ++a)
+		{
+			if (*p == *a)
+				break;
+		}
+		if (*a == '\0')
+			return count;
+		++count;
+	}
 
-  return count;
+	return count;
 }
 
 /* Variable globale utilisee par My_strtok stockant les token suivants */
@@ -129,41 +129,43 @@ char *___mystrtok;
 char *My_strtok(char *s, const char *ct)
 {
 
-  char *sbegin, *send;
+	char *sbegin, *send;
 
-  sbegin = s ? s : ___mystrtok;
-  if (!sbegin)
-  {
-    return NULL;
-  }
-  sbegin += My_strspn(sbegin, ct);
-  if (*sbegin == '\0')
-  {
-    ___mystrtok = NULL;
-    return (NULL);
-  }
-  send = My_strpbrk(sbegin, ct);
-  if (send && *send != '\0')
-    *send++ = '\0';
-  ___mystrtok = send;
-  return (sbegin);
+	sbegin = s ? s : ___mystrtok;
+	if (!sbegin)
+	{
+		return NULL;
+	}
+	sbegin += My_strspn(sbegin, ct);
+	if (*sbegin == '\0')
+	{
+		___mystrtok = NULL;
+		return (NULL);
+	}
+	send = My_strpbrk(sbegin, ct);
+	if (send && *send != '\0')
+		*send++ = '\0';
+	___mystrtok = send;
+	return (sbegin);
 }
 
 // Cifar Related Results  -------------------------------------
 
 unsigned int cifar_class[1];        // Contains the name of the result class
 image_type cifar_probabilities[10]; // Contains the probability of each class
-const char Cifar10Base[10][11] = {  // Contains the name of each class
-    "Airplane",
-    "Automobile",
-    "Bird",
-    "Cat",
-    "Deer",
-    "Dog",
-    "Frog",
-    "Horse",
-    "Ship",
-    "Truck"};
+const char Cifar10Base[10][11] =    // Contains the name of each class
+{
+	"Airplane",
+	"Automobile",
+	"Bird",
+	"Cat",
+	"Deer",
+	"Dog",
+	"Frog",
+	"Horse",
+	"Ship",
+	"Truck"
+};
 
 //--------------------------------------------------------------
 
@@ -192,25 +194,25 @@ float normalized_tensor[NN_IN_SIZE * 3] = {0};
 void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8_t *global_tab)
 {
 
-  FIL fil;    // File object
-  FRESULT fr; // FatFs return code
+	FIL fil;    // File object
+	FRESULT fr; // FatFs return code
 
-  TCHAR *plop;
-  TCHAR chaine[512];
-  char *strToken = calloc(100, sizeof(*strToken));
-  char *text = calloc(10000, sizeof(*text));
+	TCHAR *plop;
+	TCHAR chaine[512];
+	char *strToken = calloc(100, sizeof(*strToken));
+	char *text = calloc(10000, sizeof(*text));
 
-  int fsize = 0; // file size count
-  int br;        // Read count
-  int c1 = 0;
-  int c2 = 0;
-  int i = 0;
+	int fsize = 0; // file size count
+	int br;        // Read count
+	int c1 = 0;
+	int c2 = 0;
+	int i = 0;
 
-  int length = 0;
-  int width = 0;
-  int size = 0;
-  char file_name[30] = {'\0'};                //Nom du fichier a ouvrir
-  uint8_t pixels[DISPLAY_IMAGE_SIZE * 3];     //Tableau de pixel pour une image
+	int length = 0;
+	int width = 0;
+	int size = 0;
+	char file_name[30] = {'\0'};                //Nom du fichier a ouvrir
+	uint8_t pixels[DISPLAY_IMAGE_SIZE * 3];     //Tableau de pixel pour une image
 
 
     //Generation du nom de fichier
@@ -302,16 +304,23 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
     }
     printf("Closing file %s\n", ...);
 
-    // Close the file
-    if (f_close(...))
-    {
-      printf("fail to close file!");
-      return 0;
-    }
+	printf("n_image = %d\n", n_image);
+	for (i = 0; i < size * 3; i++)
+	{
+		global_tab[...] = pixels[i]; //On remplit le tableau global pour pouvoir reutiliser le tableau pixel
+	}
+	printf("Closing file %s\n", ...);
 
-  free(...);
-  free(...);
-  free(...);
+	// Close the file
+	if (f_close(...))
+	{
+		printf("fail to close file!");
+		return 0;
+	}
+
+	free(...);
+	free(...);
+	free(...);
 
 }
 
@@ -320,11 +329,13 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 
 void convert_to_greyscale(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8_t *global_tab, uint8_t image[CONV_READ_SIZE_PGM])
 {
-  printf("Affichage image numero : %d   %d*%d=%d\n", n_image, tab_width[n_image - 1], tab_length[n_image - 1], tab_size[n_image - 1]);
-  //Transformation Greyscale
-  for (int i = 0; i < tab_size[n_image - 1] * 3; i += 3)
-  { //For each pixel on R, G et B                  //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
-    ... }
+	printf("Affichage image numero : %d   %d*%d=%d\n", n_image, tab_width[n_image - 1], tab_length[n_image - 1], tab_size[n_image - 1]);
+	//Transformation Greyscale
+	for (int i = 0; i < tab_size[n_image - 1] * 3; i += 3)
+	{
+		//For each pixel on R, G et B                  //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
+		...
+	}
 }
 
 
@@ -413,13 +424,13 @@ void enable_plic_interrupts()
 
 
 volatile int imageSel;
-volatile int filterSel; 
+volatile int filterSel;
 volatile int isBouncing;
 
 
 void external_interrupt(void)
 {
-  int claim = 0;
+	int claim = 0;
 #ifdef VERBOSE
   //printf("Hello external interrupdet! "__TIMESTAMP__"\n");
 #endif  
@@ -488,9 +499,9 @@ void external_interrupt(void)
 // Filter type enum
 enum filter_type
 {
-  BYPASS,
-  EDGE_DETECTOR,
-  CNN_CLASSIFIER
+	BYPASS,
+	EDGE_DETECTOR,
+	CNN_CLASSIFIER
 };
 typedef enum filter_type filter_type;
 
@@ -526,71 +537,72 @@ typedef enum filter_type filter_type;
 ///////////////////// CONVOLUTION SIMPLE FIN //////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 
-static KERNEL_CONV_FIXED_FORMAT kernel[] = {-0.125, -0.125, -0.125,
-                                            -0.125, 1, -0.125,
-                                            -0.125, -0.125, -0.125};
+static KERNEL_CONV_FIXED_FORMAT kernel[] = { -0.125, -0.125, -0.125,
+		-0.125, 1, -0.125,
+		-0.125, -0.125, -0.125
+										   };
 
 static BIAISES_CONV_FIXED_FORMAT biaises[] = {0};
 
 // filter_nb = soit 0 soit 1
 void convolution_filter(uint8_t image[CONV_READ_SIZE_PGM], KERNEL_CONV_FIXED_FORMAT kernel[3 * 3 * 1], BIAISES_CONV_FIXED_FORMAT biaises[1], uint8_t output[CONV_CONV_TOTAL_SIZE])
 {
-  for (int j = 0; j < CONV_CONV_SIZE_1; j++)
-  {
-    for (int i = 0; i < CONV_CONV_SIZE_0; i++)
-    {
-      for (int c = 0; c < CONV_CONV_SIZE_2; c++)
-      {
-        CONV_CONV_FIXED_FORMAT sum = 0;
-        for (int l = 0; l < KERNEL1_CONV_SIZE_L; l++)
-        {
-          for (int m = 0; m < KERNEL1_CONV_SIZE_M; m++)
-          {
-          bn:
-            for (int n = 0; n < KERNEL1_CONV_SIZE_N; n++)
-            {
-              if (((j + n) > (CONV_CONV_SIZE_1 - 1)) && ((i + m) < (CONV_CONV_SIZE_0 - 1)))
-              {
-                sum = sum + 0;
-              }
-              else if (((i + m) > (CONV_CONV_SIZE_0 - 1)) && ((j + n) < (CONV_CONV_SIZE_1 - 1)))
-              {
-                sum = sum + 0;
-              }
-              else if (((i + m) > (CONV_CONV_SIZE_0 - 1)) && ((j + n) > (CONV_CONV_SIZE_1 - 1)))
-              {
-                sum = sum + 0;
-              }
-              else if (((i + m) < (CONV_CONV_SIZE_0)) && ((j + n) < (CONV_CONV_SIZE_1)))
-              {
-                sum = sum + image[indexCalculationCONV((i + m), (j + n), l, (CONV_CONV_SIZE_0), (CONV_CONV_SIZE_1), (CONV_CONV_SIZE_2))] * kernel[m + n * KERNEL1_CONV_SIZE_M + l * KERNEL1_CONV_SIZE_M * KERNEL1_CONV_SIZE_N + c * KERNEL1_CONV_SIZE_M * KERNEL1_CONV_SIZE_N * KERNEL1_CONV_SIZE_L];
-              }
-            }
-          }
-        }
+	for (int j = 0; j < CONV_CONV_SIZE_1; j++)
+	{
+		for (int i = 0; i < CONV_CONV_SIZE_0; i++)
+		{
+			for (int c = 0; c < CONV_CONV_SIZE_2; c++)
+			{
+				CONV_CONV_FIXED_FORMAT sum = 0;
+				for (int l = 0; l < KERNEL1_CONV_SIZE_L; l++)
+				{
+					for (int m = 0; m < KERNEL1_CONV_SIZE_M; m++)
+					{
+bn:
+						for (int n = 0; n < KERNEL1_CONV_SIZE_N; n++)
+						{
+							if (((j + n) > (CONV_CONV_SIZE_1 - 1)) && ((i + m) < (CONV_CONV_SIZE_0 - 1)))
+							{
+								sum = sum + 0;
+							}
+							else if (((i + m) > (CONV_CONV_SIZE_0 - 1)) && ((j + n) < (CONV_CONV_SIZE_1 - 1)))
+							{
+								sum = sum + 0;
+							}
+							else if (((i + m) > (CONV_CONV_SIZE_0 - 1)) && ((j + n) > (CONV_CONV_SIZE_1 - 1)))
+							{
+								sum = sum + 0;
+							}
+							else if (((i + m) < (CONV_CONV_SIZE_0)) && ((j + n) < (CONV_CONV_SIZE_1)))
+							{
+								sum = sum + image[indexCalculationCONV((i + m), (j + n), l, (CONV_CONV_SIZE_0), (CONV_CONV_SIZE_1), (CONV_CONV_SIZE_2))] * kernel[m + n * KERNEL1_CONV_SIZE_M + l * KERNEL1_CONV_SIZE_M * KERNEL1_CONV_SIZE_N + c * KERNEL1_CONV_SIZE_M * KERNEL1_CONV_SIZE_N * KERNEL1_CONV_SIZE_L];
+							}
+						}
+					}
+				}
 
-        CONV_CONV_FIXED_FORMAT tmp = sum * CONV_CONV_NORMALIZE;
+				CONV_CONV_FIXED_FORMAT tmp = sum * CONV_CONV_NORMALIZE;
 
-        if (tmp < 0)
-        {
-          tmp = tmp * (CONV_CONV_FIXED_FORMAT)(-1);
-        }
+				if (tmp < 0)
+				{
+					tmp = tmp * (CONV_CONV_FIXED_FORMAT)(-1);
+				}
 
-        if (sum < EDGE_DETECTOR_THRESHOLD)
-        {
-          output[indexCalculationCONV(i, j, c, (CONV_CONV_SIZE_0), (CONV_CONV_SIZE_1), (CONV_CONV_SIZE_2))] = 0;
-        }
-        else if (sum > 255 || tmp > 255)
-        {
-          output[indexCalculationCONV(i, j, c, (CONV_CONV_SIZE_0), (CONV_CONV_SIZE_1), (CONV_CONV_SIZE_2))] = 255;
-        }
-        else
-        {
-          output[indexCalculationCONV(i, j, c, (CONV_CONV_SIZE_0), (CONV_CONV_SIZE_1), (CONV_CONV_SIZE_2))] = (uint8_t)(tmp + biaises[0]);
-        }
-      }
-    }
-  }
+				if (sum < EDGE_DETECTOR_THRESHOLD)
+				{
+					output[indexCalculationCONV(i, j, c, (CONV_CONV_SIZE_0), (CONV_CONV_SIZE_1), (CONV_CONV_SIZE_2))] = 0;
+				}
+				else if (sum > 255 || tmp > 255)
+				{
+					output[indexCalculationCONV(i, j, c, (CONV_CONV_SIZE_0), (CONV_CONV_SIZE_1), (CONV_CONV_SIZE_2))] = 255;
+				}
+				else
+				{
+					output[indexCalculationCONV(i, j, c, (CONV_CONV_SIZE_0), (CONV_CONV_SIZE_1), (CONV_CONV_SIZE_2))] = (uint8_t)(tmp + biaises[0]);
+				}
+			}
+		}
+	}
 }
 
 
@@ -602,27 +614,27 @@ void convolution_filter(uint8_t image[CONV_READ_SIZE_PGM], KERNEL_CONV_FIXED_FOR
 //square root function
 float __ieee754_sqrtf(float x)
 {
-  asm("... %0, %1"
-      : "=f"(x)
-      : "f"(x));
-  return x;
+	asm("... %0, %1"
+		: "=f"(x)
+		: "f"(x));
+	return x;
 }
 
 double __ieee754_sqrt(double x)
 {
-  asm("... %0, %1"
-      : "=f"(x)
-      : "f"(x));
-  return x;
+	asm("... %0, %1"
+		: "=f"(x)
+		: "f"(x));
+	return x;
 }
 
 
 // This use the AREA based resizing method, just like the one used in OpenCV
 void my_resizing(uint8_t *target_img, uint8_t *source_img, int source_size, int source_sizeX, int source_sizeY,   //Conversion d'une image 640*480 vers 24*24
-                 int target_size, int target_sizeX, int target_sizeY)
+				 int target_size, int target_sizeX, int target_sizeY)
 {
-  double temp = 0.0;
-  int w = 0;
+	double temp = 0.0;
+	int w = 0;
 
 	...
 }
@@ -634,7 +646,7 @@ void my_resizing(uint8_t *target_img, uint8_t *source_img, int source_size, int 
 //
 float *normalizing(float *normalized_img, float *resized_img, int size) // height * width * 3
 {
-  ...
+	...
 }
 
 
@@ -644,19 +656,19 @@ float *normalizing(float *normalized_img, float *resized_img, int size) // heigh
 //
 float *normalizing_tensor(float *target_tensor, float *source_tensor, int size) // height * width
 {
- ...
+	...
 }
 
 
 
 
 /*
-  Converting an RGB image to a tensor, 
+  Converting an RGB image to a tensor,
     i.e. R0R1R2......G0G1G2........B0B1B2......
 */
 void img_to_tensor(float *target_tensor, uint8_t *source_img, int source_size, int source_sizeX, int source_sizeY)
 {
-  ...
+	...
 }
 
 
@@ -667,48 +679,48 @@ void img_to_tensor(float *target_tensor, uint8_t *source_img, int source_size, i
 
 int perform_cnn(int img_in_number)	//fonction top du CNN
 {
-  // Source = the 640*480 image
-  int source_size = DISPLAY_IMAGE_SIZE; // SOURCE IMG (640*480)
-  int source_sizeY = DISPLAY_IMAGE_HEIGHT;
-  int source_sizeX = DISPLAY_IMAGE_WIDTH;
-  // target is the resized/normalized outputs
-  int target_size = NN_IN_SIZE; // RESIZED size
-  int target_sizeY = NN_IN_HEIGHT;
-  int target_sizeX = NN_IN_WIDTH;
+	// Source = the 640*480 image
+	int source_size = DISPLAY_IMAGE_SIZE; // SOURCE IMG (640*480)
+	int source_sizeY = DISPLAY_IMAGE_HEIGHT;
+	int source_sizeX = DISPLAY_IMAGE_WIDTH;
+	// target is the resized/normalized outputs
+	int target_size = NN_IN_SIZE; // RESIZED size
+	int target_sizeY = NN_IN_HEIGHT;
+	int target_sizeX = NN_IN_WIDTH;
 
-  // Allocate memory for intermediate images/tensors
-  uint8_t *source_img;
-  
-  // Load the 640*480 PPM image
-  source_img = ... ;
+	// Allocate memory for intermediate images/tensors
+	uint8_t *source_img;
 
-  // Resize to a 24*24 RGB img.
-  DEBUG_PRINTF("Starting resizing");
-  my_resizing( ... );
+	// Load the 640*480 PPM image
+	source_img = ... ;
 
-  // Convert to a tensor
-  DEBUG_PRINTF("Starting img_to_tensor \n");
-  img_to_tensor(...);
+	// Resize to a 24*24 RGB img.
+	DEBUG_PRINTF("Starting resizing");
+	my_resizing( ... );
 
-  // Normalization
-  DEBUG_PRINTF("Starting normalization \n");
-  normalizing_tensor(...);
+	// Convert to a tensor
+	DEBUG_PRINTF("Starting img_to_tensor \n");
+	img_to_tensor(...);
 
-  /*top_cnn_mancini(tab_coeffs, tab_biais, cifar_class, normalized_tensor, cifar_probabilities);*/
+	// Normalization
+	DEBUG_PRINTF("Starting normalization \n");
+	normalizing_tensor(...);
 
-  printf("\nairplane :    %d \n", (int)cifar_probabilities[0]);
-  printf("automobile :  %d \n", (int)cifar_probabilities[1]);
-  printf("bird :        %d \n", (int)cifar_probabilities[2]);
-  printf("cat :         %d \n", (int)cifar_probabilities[3]);
-  printf("deer :        %d \n", (int)cifar_probabilities[4]);
-  printf("dog :         %d \n", (int)cifar_probabilities[5]);
-  printf("frog :        %d \n", (int)cifar_probabilities[6]);
-  printf("horse :       %d \n", (int)cifar_probabilities[7]);
-  printf("ship :        %d \n", (int)cifar_probabilities[8]);
-  printf("truck :       %d \n", (int)cifar_probabilities[9]);
-  printf("--> The image type is %s with a probability of : %d \n\n", Cifar10Base[cifar_class[0]], (int)cifar_probabilities[cifar_class[0]]);
+	/*top_cnn_mancini(tab_coeffs, tab_biais, cifar_class, normalized_tensor, cifar_probabilities);*/
 
-  return cifar_class[0];
+	printf("\nairplane :    %d \n", (int)cifar_probabilities[0]);
+	printf("automobile :  %d \n", (int)cifar_probabilities[1]);
+	printf("bird :        %d \n", (int)cifar_probabilities[2]);
+	printf("cat :         %d \n", (int)cifar_probabilities[3]);
+	printf("deer :        %d \n", (int)cifar_probabilities[4]);
+	printf("dog :         %d \n", (int)cifar_probabilities[5]);
+	printf("frog :        %d \n", (int)cifar_probabilities[6]);
+	printf("horse :       %d \n", (int)cifar_probabilities[7]);
+	printf("ship :        %d \n", (int)cifar_probabilities[8]);
+	printf("truck :       %d \n", (int)cifar_probabilities[9]);
+	printf("--> The image type is %s with a probability of : %d \n\n", Cifar10Base[cifar_class[0]], (int)cifar_probabilities[cifar_class[0]]);
+
+	return cifar_class[0];
 }
 
 
@@ -721,60 +733,61 @@ int perform_cnn(int img_in_number)	//fonction top du CNN
 
 void display(int img_in_number, filter_type filter_nb, uint8_t previous_imageSel, uint8_t previous_filterSel) //, uint8_t *edgeDetectorDone, uint8_t *CNNDone)
 {
-  volatile uint64_t *display_ptr;
-  volatile uint64_t *diplay_ptr_filtered;
-  volatile uint8_t *ptr_selected_img;
-  volatile uint8_t *ptr_selected_img_filtered;
+	volatile uint64_t *display_ptr;
+	volatile uint64_t *diplay_ptr_filtered;
+	volatile uint8_t *ptr_selected_img;
+	volatile uint8_t *ptr_selected_img_filtered;
 
-  // Get the image to print
-  display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
-  ptr_selected_img = (uint8_t *)(TAB_GS[img_in_number - 1]);
-  diplay_ptr_filtered = (uint64_t *)(TAB_GS_FILTERED[img_in_number - 1]);
-  ptr_selected_img_filtered = (uint8_t *)(TAB_GS[img_in_number - 1]);
+	// Get the image to print
+	display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
+	ptr_selected_img = (uint8_t *)(TAB_GS[img_in_number - 1]);
+	diplay_ptr_filtered = (uint64_t *)(TAB_GS_FILTERED[img_in_number - 1]);
+	ptr_selected_img_filtered = (uint8_t *)(TAB_GS[img_in_number - 1]);
 
-  int x, y;
+	int x, y;
 
   switch (filter_nb)				//Disjonction de cas en fonction du filtre sélectionné
   {
 
-  case BYPASS:
-    on_screen( ... );
-    break;
+	case BYPASS:
+		on_screen( ... );
+		break;
 
-  case EDGE_DETECTOR:
-    on_screen( ... );
-    break;
+	case EDGE_DETECTOR:
+		on_screen( ... );
+		break;
 
-  case CNN_CLASSIFIER:
-    // In this case we visualize the image, while computing ...
-    display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
-    for (y = 0; y < 480; ++y)
-    {
-      for (x = 0; x < 640 / 8; ++x)
-      {
-        ... = ... ;
-	... ;
-      }
-    }
-    // Launch the CNN
-    int result = ... ;
-    // When finished, show the LABEL as an overlay.
-    on_screen( ... );
-    break;
-  }
+	case CNN_CLASSIFIER:
+		// In this case we visualize the image, while computing ...
+		display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
+		for (y = 0; y < 480; ++y)
+		{
+			for (x = 0; x < 640 / 8; ++x)
+			{
+				... = ... ;
+				... ;
+			}
+		}
+		// Launch the CNN
+		int result = ... ;
+		// When finished, show the LABEL as an overlay.
+		on_screen( ... );
+		break;
+	}
 }
 
 
 
 
 void on_screen(int mode, int class, uint8_t *img)
-{ //, uint8_t* proc_img){
-  //printf("Welcome to on_screen\n");
+{
+	//, uint8_t* proc_img){
+	//printf("Welcome to on_screen\n");
 
-  int y, x;
-  int y_offset, x_offset;
-  volatile uint64_t *ptr_image = (uint64_t *)(img);
-  volatile uint64_t *ptr_labels_overlay = (uint64_t *)(OVERLAYS_LIST);
+	int y, x;
+	int y_offset, x_offset;
+	volatile uint64_t *ptr_image = (uint64_t *)(img);
+	volatile uint64_t *ptr_labels_overlay = (uint64_t *)(OVERLAYS_LIST);
 
   if (mode == BYPASS)										//Sélection de l'étiquette en fonction du filtre choisi
   {
@@ -801,22 +814,23 @@ void on_screen(int mode, int class, uint8_t *img)
     x_offset = 0;
   }
 
-  for (y = 0; y < 480; ++y)						//Affichage de l'image
-  {
-    for (x = 0; x < 640 / 8; ++x)
-    {
-      if ( ...
-      { //on verifie si on est dans la zone de l'etiquette
-        hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_labels_overlay);
-        ptr_labels_overlay++;
-      }
-      else
-      {
-        hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_image);
-      }
-      ptr_image++;
-    }
-  }
+	for (y = 0; y < 480; ++y)						//Affichage de l'image
+	{
+		for (x = 0; x < 640 / 8; ++x)
+		{
+			if ( ...
+		{
+			//on verifie si on est dans la zone de l'etiquette
+			hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_labels_overlay);
+				ptr_labels_overlay++;
+			}
+			else
+			{
+				hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_image);
+			}
+			ptr_image++;
+		}
+	}
 }
 
 
@@ -833,78 +847,79 @@ void on_screen(int mode, int class, uint8_t *img)
 
 int main(void)
 {
-  // Start by initializing everything, just in case.
-  init_csrs();
+	// Start by initializing everything, just in case.
+	init_csrs();
 
-  // SHow about message
-  about();
+	// SHow about message
+	about();
 
-  int x = 0;
-  int l = 0;
-  int n_image = MIN_IMAGES_TO_READ;
-  int tab_size[NB_IMAGES_TO_BE_READ] = {0};   //Tableau de toutes les tailles d'images chargees
-  int tab_width[NB_IMAGES_TO_BE_READ] = {0};  //Tableau de toutes les largeur d'images chargees
-  int tab_length[NB_IMAGES_TO_BE_READ] = {0}; //Tableau de toutes les longueurs d'images chargees
+	int x = 0;
+	int l = 0;
+	int n_image = MIN_IMAGES_TO_READ;
+	int tab_size[NB_IMAGES_TO_BE_READ] = {0};   //Tableau de toutes les tailles d'images chargees
+	int tab_width[NB_IMAGES_TO_BE_READ] = {0};  //Tableau de toutes les largeur d'images chargees
+	int tab_length[NB_IMAGES_TO_BE_READ] = {0}; //Tableau de toutes les longueurs d'images chargees
 
-  // Register work area to the default drive
-  if (f_mount(&FatFs, "", 1))
-  {
-    printf("Fail to mount SD driver!\n");
-    return 0;
-  }
+	// Register work area to the default drive
+	if (f_mount(&FatFs, "", 1))
+	{
+		printf("Fail to mount SD driver!\n");
+		return 0;
+	}
 
-  printf("Number of images to read : %d,    MIN = %d    MAX = %d\n", NB_IMAGES_TO_BE_READ, MIN_IMAGES_TO_READ, MAX_IMAGES_TO_READ);
+	printf("Number of images to read : %d,    MIN = %d    MAX = %d\n", NB_IMAGES_TO_BE_READ, MIN_IMAGES_TO_READ, MAX_IMAGES_TO_READ);
 
-  // MIN and MAX are included
-  for ( ... )				// Lire chaque image et les stocker dans global_tab
-  {
-    
-    ... ;
+	// MIN and MAX are included
+	for ( ... )				// Lire chaque image et les stocker dans global_tab
+	{
 
-  }
+		... ;
 
-  
-  if (f_mount(NULL, "", 1))
-  { // unmount it
-    printf("fail to umount disk!");
-    return 0;
-  }
-
-  // All images loaded, grayscale conversion now.
-
-  // Start the application: {filtering | no filtering} + on_screen
-  for ( ... )				//Pour chaque image de global_tab, appliquer le greyscale et stocker le résultat dans TAB_GS 
-  {
-    ... ;  
-  }
-
-  // FILTERING STUFF
-  printf("Starting filtering!\n");
-  for ( ... )                           //Pour chaque image de TAB_GS, appliquer la convolution et les stocker dans TAB_GS_FILTERED
-  {
-    ... ;
-  }
-  printf("Filtering done !\n");
+	}
 
 
+	if (f_mount(NULL, "", 1))
+	{
+		// unmount it
+		printf("fail to umount disk!");
+		return 0;
+	}
 
-  // Activate the Button inputs
-  init_csrs();
-  enable_plic_interrupts();
+	// All images loaded, grayscale conversion now.
 
-  extern volatile int imageSel;
-  extern volatile int filterSel;
-  extern volatile int isBouncing;
+	// Start the application: {filtering | no filtering} + on_screen
+	for ( ... )				//Pour chaque image de global_tab, appliquer le greyscale et stocker le r�sultat dans TAB_GS
+	{
+		... ;
+	}
 
-  imageSel = 0;
-  filterSel = 0;
-  uint8_t previous_imageSel = -1;
-  uint8_t previous_filterSel = -1;
+	// FILTERING STUFF
+	printf("Starting filtering!\n");
+	for (int fsobel = 0; fsobel < NB_IMAGES_TO_BE_READ; fsobel++)                           //Pour chaque image de TAB_GS, appliquer la convolution et les stocker dans TAB_GS_FILTERED
+	{
+		convolution_filter(TAB_GS[i], kernel, biaises, TAB_GS_FILTERED[i]) ;
+	}
+	printf("Filtering done !\n");
 
-  uint8_t edgeDetectorDone = 0;
-  uint8_t CNNDone = 0;
 
-  volatile unsigned int ii;
+
+	// Activate the Button inputs
+	init_csrs();
+	enable_plic_interrupts();
+
+	extern volatile int imageSel;
+	extern volatile int filterSel;
+	extern volatile int isBouncing;
+
+	imageSel = 0;
+	filterSel = 0;
+	uint8_t previous_imageSel = -1;
+	uint8_t previous_filterSel = -1;
+
+	uint8_t edgeDetectorDone = 0;
+	uint8_t CNNDone = 0;
+
+	volatile unsigned int ii;
 
   while (1)
   {
@@ -922,12 +937,12 @@ int main(void)
       ... ;
     }
 
-    ii = 10000;
-    while (ii--)
-    {
-      isBouncing = 0;
-    }
-  }
+		ii = 10000;
+		while (ii--)
+		{
+			isBouncing = 0;
+		}
+	}
 }
 
 
@@ -947,33 +962,33 @@ int main(void)
 
 void about()
 {
-  printf("----- DEMO DATE 2020 - University Booth --------\n");
-  printf(" by Noureddine Ait Said, and the PHELMA students\n");
-  printf("          Supervised by Mounir Benabdenbi       \n");
-  printf("            AMfoRS Team, TIMA Laboratory        \n");
-  printf("------------------------------------------------\n");
-  printf("      Version 1.0  Built @" __TIMESTAMP__ "     \n");
-  printf("------------------------------------------------\n");
-  printf("\n");
-  printf("(#################################################\n");
-  printf("(#################################################\n");
-  printf("(###########,,/((//*,*/.(###((######(#############\n");
-  printf("(##########*/((((((((((((((((((*,*/((((,(#########\n");
-  printf("(##########,((((((((((((((((((((((((((((.#########\n");
-  printf("(#########,/((((((((((((((((((((((((((((*.,,,,,*##\n");
-  printf("(#####(**,/(((((((((((((((((((((((((((((((((((((/,\n");
-  printf("(###(./(((((((((((((((((((((((((((((((((((((((((((\n");
-  printf("(,/((((((((((((((((((((((((((((((((((((((/,       \n");
-  printf("/*((((((((((/////((((((((((((((((///(((.  ./(,    \n");
-  printf(" /(((((((////////((((((((((((/.      ////,   ,    \n");
-  printf("/(/*,     ,//////(((///.      .*,    *.   *(*     \n");
-  printf("          ,/(//*/*     .,    ,((*    ,     ./((((/\n");
-  printf("   .*((/*./*    /*    /((.   ,((*    /(((((((((((/\n");
-  printf("/(((/     /*    /*    /((.   ,(((((((((((((((((((/\n");
-  printf("/(((/     /*    /*    /((((((((((((((((((((((((((/\n");
-  printf("/(((/     /*    ///((((((((((((((((((((((((((((((/\n");
-  printf("/(((/     /((((((((((((((((((((((((((((((((((((((/\n");
-  printf("/((((/(((((((((((((((((((((((((((((((((((((((((((/\n\n\n");
+	printf("----- DEMO DATE 2020 - University Booth --------\n");
+	printf(" by Noureddine Ait Said, and the PHELMA students\n");
+	printf("          Supervised by Mounir Benabdenbi       \n");
+	printf("            AMfoRS Team, TIMA Laboratory        \n");
+	printf("------------------------------------------------\n");
+	printf("      Version 1.0  Built @" __TIMESTAMP__ "     \n");
+	printf("------------------------------------------------\n");
+	printf("\n");
+	printf("(#################################################\n");
+	printf("(#################################################\n");
+	printf("(###########,,/((//*,*/.(###((######(#############\n");
+	printf("(##########*/((((((((((((((((((*,*/((((,(#########\n");
+	printf("(##########,((((((((((((((((((((((((((((.#########\n");
+	printf("(#########,/((((((((((((((((((((((((((((*.,,,,,*##\n");
+	printf("(#####(**,/(((((((((((((((((((((((((((((((((((((/,\n");
+	printf("(###(./(((((((((((((((((((((((((((((((((((((((((((\n");
+	printf("(,/((((((((((((((((((((((((((((((((((((((/,       \n");
+	printf("/*((((((((((/////((((((((((((((((///(((.  ./(,    \n");
+	printf(" /(((((((////////((((((((((((/.      ////,   ,    \n");
+	printf("/(/*,     ,//////(((///.      .*,    *.   *(*     \n");
+	printf("          ,/(//*/*     .,    ,((*    ,     ./((((/\n");
+	printf("   .*((/*./*    /*    /((.   ,((*    /(((((((((((/\n");
+	printf("/(((/     /*    /*    /((.   ,(((((((((((((((((((/\n");
+	printf("/(((/     /*    /*    /((((((((((((((((((((((((((/\n");
+	printf("/(((/     /*    ///((((((((((((((((((((((((((((((/\n");
+	printf("/(((/     /((((((((((((((((((((((((((((((((((((((/\n");
+	printf("/((((/(((((((((((((((((((((((((((((((((((((((((((/\n\n\n");
 }
 
 
@@ -985,90 +1000,90 @@ void tohost_exit(long code);
 
 unsigned long get_tbclk(void)
 {
-  unsigned long long tmp = 1000000;
-  return tmp;
+	unsigned long long tmp = 1000000;
+	return tmp;
 }
 
 char *env_get(const char *name)
 {
-  return (char *)0;
+	return (char *)0;
 }
 
 int init_mmc_standalone(int sd_base_addr);
 
 DSTATUS disk_initialize(uint8_t pdrv)
 {
-  printf("\nu-boot based first stage boot loader\n");
-  init_mmc_standalone(sd_base_addr);
-  return 0;
+	printf("\nu-boot based first stage boot loader\n");
+	init_mmc_standalone(sd_base_addr);
+	return 0;
 }
 
 int ctrlc(void)
 {
-  return 0;
+	return 0;
 }
 
 void *find_cmd_tbl(const char *cmd, void *table, int table_len)
 {
-  return (void *)0;
+	return (void *)0;
 }
 
 unsigned long timer_read_counter(void)
 {
-  return read_csr(0xb00) / 10;
+	return read_csr(0xb00) / 10;
 }
 
 void __assert_fail(const char *__assertion, const char *__file,
-                   unsigned int __line, const char *__function)
+				   unsigned int __line, const char *__function)
 {
-  printf("assertion %s failed, file %s, line %d, function %s\n", __assertion, __file, __line, __function);
-  tohost_exit(1);
+	printf("assertion %s failed, file %s, line %d, function %s\n", __assertion, __file, __line, __function);
+	tohost_exit(1);
 }
 
 void *memalign(size_t alignment, size_t size)
 {
-  char *ptr = malloc(size + alignment);
-  return (void *)((-alignment) & (size_t)(ptr + alignment));
+	char *ptr = malloc(size + alignment);
+	return (void *)((-alignment) & (size_t)(ptr + alignment));
 }
 
 int do_load(void *cmdtp, int flag, int argc, char *const argv[], int fstype)
 {
-  return 1;
+	return 1;
 }
 
 int do_ls(void *cmdtp, int flag, int argc, char *const argv[], int fstype)
 {
-  return 1;
+	return 1;
 }
 
 int do_size(void *cmdtp, int flag, int argc, char *const argv[], int fstype)
 {
-  return 1;
+	return 1;
 }
 
 DRESULT disk_read(uint8_t pdrv, uint8_t *buff, uint32_t sector, uint32_t count)
 {
-  while (count--)
-  {
-    read_block(buff, sector++);
-    buff += 512;
-  }
-  return FR_OK;
+	while (count--)
+	{
+		read_block(buff, sector++);
+		buff += 512;
+	}
+	return FR_OK;
 }
 
 DRESULT disk_write(uint8_t pdrv, const uint8_t *buff, uint32_t sector, uint32_t count)
 {
-  return FR_INT_ERR;
+	return FR_INT_ERR;
 }
 
 DRESULT disk_ioctl(uint8_t pdrv, uint8_t cmd, void *buff)
 {
-  return FR_INT_ERR;
+	return FR_INT_ERR;
 }
 
 DSTATUS disk_status(uint8_t pdrv)
 {
-  return FR_INT_ERR;
+	return FR_INT_ERR;
 }
 
 void part_init(void *bdesc)
@@ -1085,12 +1100,12 @@ void dev_print(void *bdesc)
 
 unsigned long mmc_berase(void *dev, int start, int blkcnt)
 {
-  return 0;
+	return 0;
 }
 
 unsigned long mmc_bwrite(void *dev, int start, int blkcnt, const void *src)
 {
-  return 0;
+	return 0;
 }
 
 const char version_string[] = "LowRISC minimised u-boot for SD-Card";
