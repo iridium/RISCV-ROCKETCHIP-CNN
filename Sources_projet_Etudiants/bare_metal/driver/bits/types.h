@@ -23,8 +23,8 @@
 #ifndef	_BITS_TYPES_H
 #define	_BITS_TYPES_H	1
 
-#include <features.h>
-#include <bits/wordsize.h>
+#include "../features.h"
+#include "wordsize.h"
 
 /* Convenience types.  */
 typedef unsigned char __u_char;
@@ -118,7 +118,7 @@ __extension__ typedef unsigned long long int __u_quad_t;
 #else
 # error
 #endif
-#include <bits/typesizes.h>	/* Defines __*_T_TYPE macros.  */
+#include "./typesizes.h"	/* Defines __*_T_TYPE macros.  */
 
 
 //__STD_TYPE __DEV_T_TYPE __dev_t;	/* Type of device numbers.  */

@@ -385,7 +385,7 @@
 
 /* Get definitions of __STDC_* predefined macros, if the compiler has
    not preincluded this header automatically.  */
-#include <stdc-predef.h>
+#include "./stdc-predef.h"
 
 /* This macro indicates that the installed library is the GNU C Library.
    For historic reasons the value now is 6 and this will stay from now
@@ -407,7 +407,7 @@
 /* This is here only because every header file already includes this one.  */
 #ifndef __ASSEMBLER__
 # ifndef _SYS_CDEFS_H
-#  include <sys/cdefs.h>
+#  include "./sys/cdefs.h"
 # endif
 
 /* If we don't have __REDIRECT, prototypes will be missing if
@@ -431,7 +431,7 @@
    Get the definitions of all the appropriate `__stub_FUNCTION' symbols.
    <gnu/stubs.h> contains `#define __stub_FUNCTION' when FUNCTION is a stub
    that will always return failure (and set errno to ENOSYS).  */
-#include <gnu/stubs.h>
+#include "./gnu/stubs.h"
 
 
 #endif	/* features.h  */
