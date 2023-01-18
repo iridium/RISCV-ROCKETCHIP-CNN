@@ -373,11 +373,12 @@ void convert_to_greyscale(int n_image, int *tab_size, int *tab_width, int *tab_l
 		//For each pixel on R, G et B                  //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
 	//	...
 	//}
+  int pass = (n_image - 1)*CONV_READ_SIZE_PPM;
   for (int i = 0; i < tab_size[n_image - 1] * 3; i ++)
 	{
 		//For each pixel on R, G et B
     //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
-		image[i] =  0.3*global_tab[i] + 0.57*global_tab[CONV_READ_SIZE_PGM  + i] + 0.11*global_tab[CONV_READ_SIZE_PGM*2  + i] ;
+    image[i] =  0.3*global_tab[i + pass] + 0.57*global_tab[CONV_READ_SIZE_PGM  + i + pass] + 0.11*global_tab[CONV_READ_SIZE_PGM*2  + i + pass] ;
 	}               //R                       //G                                    //B
 }
 
@@ -932,10 +933,15 @@ int main(void)
 	// All images loaded, grayscale conversion now.
 
 	// Start the application: {filtering | no filtering} + on_screen
-	for ( ... )				//Pour chaque image de global_tab, appliquer le greyscale et stocker le résultat dans TAB_GS
-	{
-		... ;
-	}
+	//for ( ... )				//Pour chaque image de global_tab, appliquer le greyscale et stocker le résultat dans TAB_GS
+	//{
+	//	... ;
+	//}
+  for (r = n_image; r <= NB_IMAGES_TO_BE_READ; r++)					//Pour chaque image de global_tab, appliquer le greyscale et stocker le résultat dans TAB_GS
+  {
+    convert_to_greyscale(r, tab_size[r-1],tab_width[r-1],tab_[r-1], global_tab, TAB_GS[r]) ;
+  }
+
 
 	// FILTERING STUFF
 	printf("Starting filtering!\n");
