@@ -876,7 +876,7 @@ int main(void)
 	printf("Starting filtering!\n");
 	for (int fsobel = 0; fsobel < NB_IMAGES_TO_BE_READ; fsobel++)                           //Pour chaque image de TAB_GS, appliquer la convolution et les stocker dans TAB_GS_FILTERED
 	{
-		convolution_filter(TAB_GS[i], kernel, biaises, TAB_GS_FILTERED[i]) ;
+		convolution_filter(TAB_GS[fsobel], kernel, biaises, TAB_GS_FILTERED[fsobel]) ;
 	}
 	printf("Filtering done !\n");
 
