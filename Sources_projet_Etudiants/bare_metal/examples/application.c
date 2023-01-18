@@ -929,10 +929,11 @@ int main(void)
 	printf("Number of images to read : %d,    MIN = %d    MAX = %d\n", NB_IMAGES_TO_BE_READ, MIN_IMAGES_TO_READ, MAX_IMAGES_TO_READ);
 
 	// MIN and MAX are included
-	for ( ... )				// Lire chaque image et les stocker dans global_tab
+	int r = 0;
+	for (r = n_image; r <= NB_IMAGES_TO_BE_READ; r++)				// Lire chaque image et les stocker dans global_tab
 	{
 
-		... ;
+		read_pic(r, tab_size[r-1],tab_width[r-1],tab_[r-1], global_tab);
 
 	}
 
