@@ -321,12 +321,12 @@ void convert_to_greyscale(int n_image, int *tab_size, int *tab_width, int *tab_l
 
 void init_csrs()
 {
-  ... ;    // init mie
-  ... ;    // init sie
-  ... ;    // init mip
-  ... ;    // init sip
-  ... ;    // init mideleg
-  ... ;    // init medeleg
+  write_csr(mie,     0);    // init mie
+  write_csr(sie,     0);    // init sie
+  write_csr(mip,     0);    // init mip
+  write_csr(sip,     0);    // init sip
+  write_csr(mideleg, 0);    // init mideleg
+  write_csr(medeleg, 0);    // init medeleg
 }
 
 #define PLIC_BASE_ADDRESS 0x0C000000
@@ -371,26 +371,26 @@ void enable_plic_interrupts()
 
   // Setting the Priority of the interrupt with ID 1,2,3 and 4 to value 1, so that the interrupts can be fired
   // Recall that an interrupt is fired when its priority is > than the threshold
-  *(volatile unsigned int *) ... ;
-  *(volatile unsigned int *) ... ;
-  *(volatile unsigned int *) ... ;
-  *(volatile unsigned int *) ... ;
+  *(volatile unsigned int *) PLIC_PRIORITY_BTNW = 1;
+  *(volatile unsigned int *) PLIC_PRIORITY_BTNE = 1;
+  *(volatile unsigned int *) PLIC_PRIORITY_BTNS = 1;
+  *(volatile unsigned int *) PLIC_PRIORITY_BTNN = 1;
 
   // Setting the priority threshold to Zero
-  *(volatile unsigned int *) ... ;
+  *(volatile unsigned int *) PLIC_HART0_PRIO_THRESH_ADDR = 0;
 
   // clear interrupt pending
-  *(volatile unsigned int *) ... ;
+  *(volatile unsigned int *) PLIC_INT_PENDING_BASEADDR = 0;
 
   // PLIC ENABLE interrupts of ID 1,2,3 and 4
   // (ID 1 and ID 2 are connected to zero)
-  *(volatile unsigned int *)(PLIC_INT_ENABLE_BASEADDR) = ... ;
+  *(volatile unsigned int *) PLIC_INT_ENABLE_BASEADDR = 0x1e;
 
   // Enable MEIP (Machine External Interrupt Pending) bit in MIE register
-  ... ;
+  set_csr(mie, MIP_MEIP);
 
   // Enable MIE (Machine Interrupt Enable) bit of MSTATUS
-  ... ;
+  set_csr(mstatus, MSTATUS_MIE);
 }
 
 
