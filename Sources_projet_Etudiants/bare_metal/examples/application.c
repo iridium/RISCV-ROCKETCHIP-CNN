@@ -613,14 +613,14 @@ void my_resizing(uint8_t* target_img, uint8_t* source_img, int source_size, int 
       double x_diff = (x * x_ratio) - x2;
       double y_diff = (y * y_ratio) - y2;
       for (int k = 0; k < 3; k++) {
-          int index1 = source_sizeX * y2 + x2 + source_size/3 * k;
-          int index2 = source_sizeX * y2 + x2 + 1 + source_size/3 * k;
-          int index3 = source_sizeX * (y2 + 1) + x2 + source_size/3 * k;
-          int index4 = source_sizeX * (y2 + 1) + x2 + 1 + source_size/3 * k;
-          double v1 = source_img[index1] * (1 - x_diff) + source_img[index2] * x_diff;
-          double v2 = source_img[index3] * (1 - x_diff) + source_img[index4] * x_diff;
-          int index = target_sizeX * y + x + target_size/3 * k;
-          target_img[index] = (uint8_t) (v1 * (1 - y_diff) + v2 * y_diff);
+        int index1 = source_sizeX * y2 + x2 + source_size/3 * k;
+        int index2 = source_sizeX * y2 + x2 + 1 + source_size/3 * k;
+        int index3 = source_sizeX * (y2 + 1) + x2 + source_size/3 * k;
+        int index4 = source_sizeX * (y2 + 1) + x2 + 1 + source_size/3 * k;
+        double v1 = source_img[index1] * (1 - x_diff) + source_img[index2] * x_diff;
+        double v2 = source_img[index3] * (1 - x_diff) + source_img[index4] * x_diff;
+        int index = target_sizeX * y + x + target_size/3 * k;
+        target_img[index] = (uint8_t) (v1 * (1 - y_diff) + v2 * y_diff);
       }
     }
   }
