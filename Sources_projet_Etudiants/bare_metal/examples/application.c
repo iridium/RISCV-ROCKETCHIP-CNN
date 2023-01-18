@@ -764,31 +764,31 @@ void display(int img_in_number, filter_type filter_nb, uint8_t previous_imageSel
   switch (filter_nb)				//Disjonction de cas en fonction du filtre sélectionné
   {
 
-	case BYPASS:
-		on_screen( ... );
-		break;
+  case BYPASS:
+    on_screen( BYPASS, 10, display_ptr );
+    break;
 
-	case EDGE_DETECTOR:
-		on_screen( ... );
-		break;
+  case EDGE_DETECTOR:
+    on_screen(EDGE_DETECTOR, 11,diplay_ptr_filtered );
+    break;
 
-	case CNN_CLASSIFIER:
-		// In this case we visualize the image, while computing ...
-		display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
-		for (y = 0; y < 480; ++y)
-		{
-			for (x = 0; x < 640 / 8; ++x)
-			{
-				... = ... ;
-				... ;
-			}
-		}
-		// Launch the CNN
-		int result = ... ;
-		// When finished, show the LABEL as an overlay.
-		on_screen( ... );
-		break;
-	}
+  case CNN_CLASSIFIER:
+    // In this case we visualize the image, while computing ...
+    display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
+      for (x = 0; x < 640 / 8; ++x)
+      {
+        hid_new_vga_ptr[x + y * 640 / 8] = (*display_ptr);
+	      display_ptr++;
+      }
+    }
+    // Launch the CNN
+    int result = perform_cnn(img_in_number) ;
+    // When finished, show the LABEL as an overlay.
+    on_screen( CNN_CLASSIFIER, result, ptr_selected_img );
+    break;
+  }
+    {
+    for (y = 0; y < 480; ++y)
 }
 
 
@@ -808,7 +808,7 @@ void on_screen(int mode, int class, uint8_t *img)
   {
     printf("\nPainting BYPASS overlay.\n");
     //L'image à l'indice 10 correspond à l'overlay du bypass
-    ptr_labels_overlay = ... ; // on decale pour sauter les etiquettes des classes du CNN
+    ptr_labels_overlay = ptr_labels_overlay + 10*OVERLAY_WIDTH*OVERLAY_HEIGHT/8; // on decale pour sauter les etiquettes des classes du CNN
     y_offset = 0;
     x_offset = 0;
   }
@@ -816,7 +816,7 @@ void on_screen(int mode, int class, uint8_t *img)
   {
     printf("\nPainting CNN CLASS overlay\n");
     //L'image aux indices 0 à 9 correspondent aux overlays des différentes classes du CNN
-    ptr_labels_overlay = ... ;
+    ptr_labels_overlay = ptr_labels_overlay + class*OVERLAY_WIDTH*OVERLAY_HEIGHT/8 ;
     y_offset = 0;
     x_offset = 0;
   }
@@ -824,28 +824,27 @@ void on_screen(int mode, int class, uint8_t *img)
   {
     printf("\nPainting the FILTER overlay\n");
     //L'image à l'indice 11 correspond à l'overlay du edge detector
-    ptr_labels_overlay = ... ; //apres les etiquettes des classes
+    ptr_labels_overlay = ptr_labels_overlay + 11*OVERLAY_WIDTH*OVERLAY_HEIGHT/8 ; //apres les etiquettes des classes
     y_offset = 0;
     x_offset = 0;
   }
 
-	for (y = 0; y < 480; ++y)						//Affichage de l'image
-	{
-		for (x = 0; x < 640 / 8; ++x)
-		{
-			if ( ...
-		{
-			//on verifie si on est dans la zone de l'etiquette
-			hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_labels_overlay);
-				ptr_labels_overlay++;
-			}
-			else
-			{
-				hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_image);
-			}
-			ptr_image++;
-		}
-	}
+  for (y = 0; y < 480; ++y)						//Affichage de l'image
+  {
+    for (x = 0; x < 640 / 8; ++x)
+    {
+      if ( (x<=OVERLAY_WIDTH/8)&&(y<=OVERLAY_HEIGHT))
+      { //on verifie si on est dans la zone de l'etiquette
+        hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_labels_overlay);
+        ptr_labels_overlay++;
+      }
+      else
+      {
+        hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_image);
+      }
+      ptr_image++;
+    }
+  }
 }
 
 
@@ -938,18 +937,18 @@ int main(void)
 
   while (1)
   {
-    if ( ... )    //Comparaison des valeurs courantes et précédentes des variables de sélection de l'image et du filtre
+    if ( (imageSel!= previous_imageSel)||(filterSel!=previous_filterSel))    //Comparaison des valeurs courantes et précédentes des variables de sélection de l'image et du filtre
     {
-      if ( ... )
+      if ( imageSel==BYPASSS )
       {
         edgeDetectorDone = 0;
         CNNDone = 0;
       }
 
-      display( ... );		//Si différence, maise à jour de l'affichage
+      display( imageSel, filterSel, previous_imageSel, previous_filterSel );		//Si différence, maise à jour de l'affichage
 
-      ... ;						//Mise à jour de des valeurs de previous_imageSel et previous_filterSel en fonction des valeurs courantes
-      ... ;
+      previous_imageSel = imageSel ;						//Mise à jour de des valeurs de previous_imageSel et previous_filterSel en fonction des valeurs courantes
+      previous_filterSel = filterSel ;
     }
 
 		ii = 10000;
