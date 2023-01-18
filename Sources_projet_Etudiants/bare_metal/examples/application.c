@@ -410,7 +410,7 @@ void external_interrupt(void)
   
   // Read the ID (the highest priority pending interrupt)
   // If the value we read is zero then no pending interrupt is coming from PLIC 
-  claim = plic[ ... ]; 									//consulter le fichier syscall.c
+  claim = plic[ PLIC_INT_PENDING_BASEADDR ]; 									//consulter le fichier syscall.c
   clear_csr(mie, MIP_MEIP);
   if(isBouncing == 0)
   {
@@ -418,26 +418,26 @@ void external_interrupt(void)
   	// If BTNW :									//Si pression du bouton Ouest, décrémentation de la variable de sélection de l'image
   	if (claim == 1)									//Mise à sa valeur max si elle atteint sa valeur min
   	{
-  		... ;
-  		if( ... ) ... ;
+  	  imageSel--;
+  		if( imageSel < 0) imageSel =  2;
     }
   	// If BTNE :									//Si pression du bouton Est, incrémentation de la variable de sélection de l'image
   	else if (claim == 2)								//Mise à sa valeur min si elle atteint sa valeur max
   	{
-      		... ;
-      if( ... )
-        ... ;
+      imageSel++;
+      if( imageSel > 2 ) imageSel = 0;
   	}
   	// If BTNS :									//Si pression du bouton Sud, décrémentation de la variable de sélection du filtre
   	else if (claim == 3)								//Mise à sa valeur max si elle atteint sa valeur min
   	{
-  		... ;
-  		if( ... ) ... ;
+  		filterSel--;
+  		if( filterSel < 0 ) filterSel = 2 ;
   	}
   	// If BTNN :									//Si pression du bouton Nord, incrémentation de la variable de sélection du filtre
   	else if (claim == 4)								//Mise à sa valeur min si elle atteint sa valeur max
   	{
-      		...;
+      filterSel++;
+      if(filterSel > 2) filterSel = 0;
   	}
   	isBouncing = 1;
   }
@@ -445,7 +445,7 @@ void external_interrupt(void)
   // Write the ID of the interrupt source to the claim/complete register to complete the interrupt
   // The PLIC will clear the pending bit of the corresponding ID 
   // /!\ If the ID don't match the pending ID, the completion is silently ignored
-  plic[ ... ] = claim;
+  plic[ PLIC_HART0_CLAIM_COMPLETE_ADDR ] = claim;
   set_csr(mie, MIP_MEIP); 
 }
 
