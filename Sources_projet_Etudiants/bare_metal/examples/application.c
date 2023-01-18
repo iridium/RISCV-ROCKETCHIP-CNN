@@ -207,6 +207,7 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 	int c1 = 0;
 	int c2 = 0;
 	int i = 0;
+	int j = 0; //added to do OBS2
 
 	int length = 0;
 	int width = 0;
@@ -215,112 +216,148 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 	uint8_t pixels[DISPLAY_IMAGE_SIZE * 3];     //Tableau de pixel pour une image
 
 
-    //Generation du nom de fichier
-    //sprintf( ..., "%d.ppm", ... );
-    sprintf( file_name, "%d.ppm", n_image );
+	//Generation du nom de fichier
+	//sprintf( ..., "%d.ppm", ... );
+	sprintf( file_name, "%d.ppm", n_image );
 
-    // Open a file
-    //printf("Loading %s\n", ... );
-    //fr = f_open( ... , ... , FA_READ);
-    printf("Loading %s\n", file_name );
-    fr = f_open( &fil , file_name , FA_READ);
-    if (fr)
-    {
-      printf("Failed to open %s!\n",  file_name );
-      return 0;
-    }
-
-    //Lecture de l'entete
-    //fr = f_read( &fil , &c1, 1, ... );
-    //fr = f_read( &fil , &c2, 1, ... );
-    fr = f_read( &fil , &c1, 1, &br );
-    fr = f_read( &fil , &c2, 1, &br );
-
-    //Si l'entete vaut les caracteres 'P3' alors, on est dans le cas d'un fichier ppm
-    if (c1 == 0x50 && c2 == 0x33)
-    {
-      //printf("Le fichier %s est un fichier ppm P3.\n", ... );
-      //plop = f_gets(text, 10000, ... );
-      //plop = f_gets(text, 10000, ... );
-      printf("Le fichier %s est un fichier ppm P3.\n", file_name );
-      plop = f_gets(text, 10000, &fil );
-      plop = f_gets(text, 10000, &fil );
-      if (text[0] == '#')
-      { // test ligne de commentaire de openCV
-        plop = f_gets(text, 10000, &fil);
-      }
-      //strToken = ...(text, " ");					//Utilisation des fonctions sur les chaînes de caractères décrites plus haut
-      //length = ...(strToken); //Lecture de la longueur de l'image
-      //strToken = ...(NULL, "\n");
-      //width = ...(strToken); //Lecture de la largeur de l'image
-      //size = length * width;
-      //tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues 
-      //tab_length[...] = length;
-      //tab_size[...] = size;
-      
-      strToken = ...(text, " ");					//Utilisation des fonctions sur les chaînes de caractères décrites plus haut
-      length = ...(strToken); //Lecture de la longueur de l'image
-      strToken = ...(NULL, "\n");
-      width = ...(strToken); //Lecture de la largeur de l'image
-      size = length * width;
-      tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues 
-      tab_length[...] = length;
-      tab_size[...] = size;
-      for (i = 0; i < size; i++)					//initialisation du tableau pixel
-      {
-        pixels[i] = 0;
-      }
-      printf("File size: %d and image size : %d * %d = %d\n", ... ,
-             tab_length[ ... ],
-             tab_width[ ... ],
-             tab_size[ ... ]);
-
-      plop = f_gets(text, 10000, ... );
-      i = 0;
-      plop = calloc(3 * size, sizeof(*plop));
-      //Pour toutes les lignes du fichier
-      while (&fil != NULL && i < (3 * size))
-      {
-        plop = f_gets(text, 10000, ... ); //On lit une ligne
-        strToken = ...(text, " ");  //On separe les differents chiffres
-        //Pour tous les chiffres de la ligne
-        while (strToken != NULL && i < (3 * size))
-        {
-          pixels[i] = ...(strToken); //On remplit le tableau pixel par pixel
-          i++;
-          strToken = ...(NULL, " "); //On selectionne le token suivant
-          if (strToken[0] == '\n')
-          { // On enlève les caractère de saut de ligne '\n'
-            strToken = NULL;
-          }
-        }
-      }
-    }
-   
-    printf("n_image = %d\n", n_image);
-    for (i = 0; i < size * 3; i++)
-    {
-      global_tab[...] = pixels[i]; //On remplit le tableau global pour pouvoir reutiliser le tableau pixel
-    }
-    printf("Closing file %s\n", ...);
-
-	printf("n_image = %d\n", n_image);
-	for (i = 0; i < size * 3; i++)
+	// Open a file
+	//printf("Loading %s\n", ... );
+	//fr = f_open( ... , ... , FA_READ);
+	printf("Loading %s\n", file_name );
+	fr = f_open( &fil , file_name , FA_READ);
+	if (fr)
 	{
-		global_tab[...] = pixels[i]; //On remplit le tableau global pour pouvoir reutiliser le tableau pixel
-	}
-	printf("Closing file %s\n", ...);
-
-	// Close the file
-	if (f_close(...))
-	{
-		printf("fail to close file!");
+		printf("Failed to open %s!\n",  file_name );
 		return 0;
 	}
 
-	free(...);
-	free(...);
-	free(...);
+	//Lecture de l'entete
+	//fr = f_read( &fil , &c1, 1, ... );
+	//fr = f_read( &fil , &c2, 1, ... );
+	fr = f_read( &fil , &c1, 1, &br );
+	fr = f_read( &fil , &c2, 1, &br );
+
+	//Si l'entete vaut les caracteres 'P3' alors, on est dans le cas d'un fichier ppm
+	if (c1 == 0x50 && c2 == 0x33)
+	{
+		//printf("Le fichier %s est un fichier ppm P3.\n", ... );
+		//plop = f_gets(text, 10000, ... );
+		//plop = f_gets(text, 10000, ... );
+		printf("Le fichier %s est un fichier ppm P3.\n", file_name );
+		plop = f_gets(text, 10000, &fil );
+		plop = f_gets(text, 10000, &fil );
+		if (text[0] == '#')
+		{
+			// test ligne de commentaire de openCV
+			plop = f_gets(text, 10000, &fil);
+		}
+		//strToken = ...(text, " ");					//Utilisation des fonctions sur les chaînes de caractères décrites plus haut
+		//length = ...(strToken); //Lecture de la longueur de l'image
+		//strToken = ...(NULL, "\n");
+		//width = ...(strToken); //Lecture de la largeur de l'image
+		//size = length * width;
+		//tab_width[...] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues
+		//tab_length[...] = length;
+		//tab_size[...] = size;
+
+		strToken = My_strtok(text, " ");					//Utilisation des fonctions sur les chaînes de caractères décrites plus haut
+		length = My_atoi(strToken); //Lecture de la longueur de l'image
+		strToken = My_strtok(NULL, "\n");
+		width = My_atoi(strToken); //Lecture de la largeur de l'image
+		size = length * width;
+		tab_width[n_image] = width;						//Remplissage des tableaux des valeus de longueur, largeur et taille des images lues
+		tab_length[n_image] = length;
+		tab_size[n_image] = size;
+		for (i = 0; i < size; i++)					//initialisation du tableau pixel
+		{
+			pixels[i] = 0;
+		}
+		//printf("File size: %d and image size : %d * %d = %d\n", ... ,
+		//       tab_length[ ... ],
+		//       tab_width[ ... ],
+		//       tab_size[ ... ]);
+
+		//plop = f_gets(text, 10000, ... );
+		printf("File size: %d and image size : %d * %d = %d\n", tab_size[n_image] ,
+			   tab_length[ n_image ],
+			   tab_width[ n_image ],
+			   tab_size[ n_image ]); //OBS 1: File size = image size??
+
+		plop = f_gets(text, 10000, &fil );
+		i = 0;
+		plop = calloc(3 * size, sizeof(*plop));
+		//Pour toutes les lignes du fichier
+		while (&fil != NULL && i < (3 * size))
+		{
+			plop = f_gets(text, 10000, &fil ); //On lit une ligne
+
+			// strToken = ...(text, " ");  //On separe les differents chiffres
+			//Pour tous les chiffres de la ligne
+			// while (strToken != NULL && i < (3 * size))
+			// {
+			//   pixels[i] = ...(strToken); //On remplit le tableau pixel par pixel
+			//   i++;
+			//   strToken = ...(NULL, " "); //On selectionne le token suivant
+			//   if (strToken[0] == '\n')
+			//   { // On enlève les caractère de saut de ligne '\n'
+			//     strToken = NULL;
+			//   }
+			// }
+
+			strToken = My_strtok(text, " ");  //On separe les differents chiffres
+			//Pour tous les chiffres de la ligne
+			while (strToken != NULL && i < (3 * size))
+			{
+				pixels[i] = My_atoi(strToken); //On remplit le tableau pixel par pixel
+				i++;
+				strToken = My_strtok(NULL, " "); //On selectionne le token suivant
+				if (strToken[0] == '\n')
+				{
+					// On enlève les caractère de saut de ligne '\n'
+					strToken = NULL;
+				}
+			}
+		}
+	}
+
+	printf("n_image = %d\n", n_image);
+	//for (i = 0; i < size * 3; i++)
+	//{
+	//  global_tab[...] = pixels[i]; //On remplit le tableau global pour pouvoir reutiliser le tableau pixel
+	//}
+	//printf("Closing file %s\n", ...);
+
+	// Close the file
+	//if (f_close(...))
+	//{
+	//  printf("fail to close file!");
+	//  return 0;
+	//}
+
+	//OBS2: This for was modified to save the files in n_image*width*length*bit
+	for (j = 0; j < size * 3; j += 3)
+	{
+		for (i = 0; i <  3; i++)
+		{
+			global_tab[size * i + (n_image - 1)*size * 3] = pixels[i + j]; //On remplit le tableau global pour pouvoir reutiliser le tableau pixel
+		}
+	}
+	printf("Closing file %s\n", file_name);
+
+	// Close the file
+	if (f_close(&fil))
+	{
+		printf("Fail to close file!");
+		return 0;
+	}
+
+	//free(...);
+	//free(...);
+	//free(...);
+
+	free(plop);
+	free(strToken);
+	free(text);
 
 }
 
@@ -331,12 +368,20 @@ void convert_to_greyscale(int n_image, int *tab_size, int *tab_width, int *tab_l
 {
 	printf("Affichage image numero : %d   %d*%d=%d\n", n_image, tab_width[n_image - 1], tab_length[n_image - 1], tab_size[n_image - 1]);
 	//Transformation Greyscale
-	for (int i = 0; i < tab_size[n_image - 1] * 3; i += 3)
-	{
+	//for (int i = 0; i < tab_size[n_image - 1] * 3; i += 3)
+	//{
 		//For each pixel on R, G et B                  //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
-		...
-	}
+	//	...
+	//}
+  for (int i = 0; i < tab_size[n_image - 1] * 3; i ++)
+	{
+		//For each pixel on R, G et B
+    //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
+		image[i] =  0.3*global_tab[i] + 0.57*global_tab[CONV_READ_SIZE_PGM  + i] + 0.11*global_tab[CONV_READ_SIZE_PGM*2  + i] ;
+	}               //R                       //G                                    //B
 }
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
