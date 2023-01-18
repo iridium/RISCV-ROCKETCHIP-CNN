@@ -662,21 +662,23 @@ int perform_cnn(int img_in_number)	//fonction top du CNN
 
   // Allocate memory for intermediate images/tensors
   uint8_t *source_img;
-  
+  uint8_t target_sensor_resized[NN_IN_SIZE];
+  float   target_tensor[NN_IN_SIZE];
+
   // Load the 640*480 PPM image
-  source_img = .... ;
+  source_img = global_tab[img_in_number] ;
 
   // Resize to a 24*24 RGB img.
   DEBUG_PRINTF("Starting resizing");
-  my_resizing( ... );
+  my_resizing( target_tensor, source_img, source_size, source_sizeX, source_sizeY, target_size, target_sizeX, target_sizeY);
 
   // Convert to a tensor
   DEBUG_PRINTF("Starting img_to_tensor \n");
-  img_to_tensor(...);
+  img_to_tensor(target_tensor, source_img, target_size, target_sizeX, target_sizeY);
 
   // Normalization
   DEBUG_PRINTF("Starting normalization \n");
-  normalizing_tensor(...);
+  normalizing_tensor(target_tensor, source_tensor, ??size??);
 
   /*top_cnn_mancini(tab_coeffs, tab_biais, cifar_class, normalized_tensor, cifar_probabilities);*/
 
@@ -736,14 +738,14 @@ void display(int img_in_number, filter_type filter_nb, uint8_t previous_imageSel
     {
       for (x = 0; x < 640 / 8; ++x)
       {
-        ... = ... ;
-	... ;
+        hid_new_vga_ptr[x + y * 640 / 8] = (*display_ptr);
+	      display_ptr++;
       }
     }
     // Launch the CNN
-    int result = ... ;
+    int result = perform_cnn(img_in_number);
     // When finished, show the LABEL as an overlay.
-    on_screen( ... );
+    on_screen(CNN_CLASSIFIER, result, ptr_selected_img);
     break;
   }
 }
@@ -764,7 +766,7 @@ void on_screen(int mode, int class, uint8_t *img)
   {
     printf("\nPainting BYPASS overlay.\n");
     //L'image à l'indice 10 correspond à l'overlay du bypass
-    ptr_labels_overlay = ... ; // on decale pour sauter les etiquettes des classes du CNN
+    ptr_labels_overlay = ptr_labels_overlay + class*OVERLAY_WIDTH*OVERLAY_HEIGHT/8; // on decale pour sauter les etiquettes des classes du CNN
     y_offset = 0;
     x_offset = 0;
   }
@@ -789,7 +791,7 @@ void on_screen(int mode, int class, uint8_t *img)
   {
     for (x = 0; x < 640 / 8; ++x)
     {
-      if ( ...
+      if ( (x<=OVERLAY_WIDTH/8)&&(y<=OVERLAY_HEIGHT))
       { //on verifie si on est dans la zone de l'etiquette
         hid_new_vga_ptr[x + y * 640 / 8] = (*ptr_labels_overlay);
         ptr_labels_overlay++;
