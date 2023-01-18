@@ -3,17 +3,15 @@
 //#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <memory.h>
-// #include <math.h>
-#include "encoding.h"
-#include "mini-printf.h"
-#include "diskio.h"
-#include "ff.h"
-#include "bits.h"
-#include "hid.h"
-#include "eth.h"
-#include "elfriscv.h"
-#include "lowrisc_memory_map.h"
+#include "../driver/encoding.h"
+#include "../driver/mini-printf.h"
+#include "../driver/diskio.h"
+#include "../driver/ff.h"
+#include "../driver/bits.h"
+#include "../driver/hid.h"
+#include "../driver/eth.h"
+#include "../driver/elfriscv.h"
+#include "../driver/lowrisc_memory_map.h"
 
 // For the CNN application ----
 #include "types.h"
