@@ -608,19 +608,18 @@ void my_resizing(uint8_t* target_img, uint8_t* source_img, int source_size, int 
   double y_ratio = (double) source_sizeY / target_sizeY;
   for (int y = 0; y < target_sizeY; y++) {
     for (int x = 0; x < target_sizeX; x++) {
-      int x2 = (int) (x * x_ratio);
-      int y2 = (int) (y * y_ratio);
-      double x_diff = (x * x_ratio) - x2;
-      double y_diff = (y * y_ratio) - y2;
       for (int k = 0; k < 3; k++) {
-        int index1 = source_sizeX * y2 + x2 + source_size/3 * k;
-        int index2 = source_sizeX * y2 + x2 + 1 + source_size/3 * k;
-        int index3 = source_sizeX * (y2 + 1) + x2 + source_size/3 * k;
-        int index4 = source_sizeX * (y2 + 1) + x2 + 1 + source_size/3 * k;
-        double v1 = source_img[index1] * (1 - x_diff) + source_img[index2] * x_diff;
-        double v2 = source_img[index3] * (1 - x_diff) + source_img[index4] * x_diff;
-        int index = target_sizeX * y + x + target_size/3 * k;
-        target_img[index] = (uint8_t) (v1 * (1 - y_diff) + v2 * y_diff);
+        int tot = 0;
+
+        for (int j = 0; j < y_ratio; j++){
+          for (int i = 0; i < x_ratio; i++){
+            int x2 = x_ratio*x + i;
+            int y2 = y_ratio*y + j;
+            tot += *(source_img + x2 + source_sizeX*y2 + source_sizeX*source_sizeY*k);
+          }
+        }
+        uint8_t moy = tot/(y_ratio*x_ratio);
+        *(target_img + x + target_sizeX*y + target_sizeX*target_sizeY*k) = moy;
       }
     }
   }
@@ -631,9 +630,28 @@ void my_resizing(uint8_t* target_img, uint8_t* source_img, int source_size, int 
 //
 // Normalizing the image 24x24 to be feed to the CNN
 //
-float *normalizing(float *normalized_img, float *resized_img, int size) // height * width * 3
-{
-  ...
+void normalizing(float* normalized_img, uint8_t* resized_img, int size){ // height * width * 3 
+// J'AI CHANGé L'ENTETE, RESIZEDIMG EST UN UINT_8* AU LIEU DE FLOAT*    
+    float mu = 0;
+    float ecartype = 0;
+
+    // Calcul de la moyenne
+    for (int i = 0; i < size; i++) {mu += *(resized_img+i);}
+    mu /= size;
+
+    // Calcul de l'écart-type
+    for (int i = 0; i < size; i++) {ecartype += (*(resized_img+i) - mu) * (*(resized_img+i) - mu);}
+    ecartype = sqrt(ecartype / size);
+
+    // Calcul de la valeur maximale
+    float maximum = 0;
+    if (1/sqrt(size/3) > ecartype){maximum = 1/sqrt(size/3);}
+    else {maximum = ecartype;}
+
+    // Normalisation des valeurs de la matrice
+    for (int i = 0; i < size; i++){
+      *(normalized_img+i) = (*(resized_img+i) - mu) / maximum; //(mat_int.values[i][j][k] - mu) / maximum;
+    }
 }
 
 
