@@ -16,10 +16,10 @@
 #include "lowrisc_memory_map.h"
 
 // For the CNN application ----
-#include "types.h"
-#include "top_cnn_mancini.h"
-#include "coeffs_cifar.h"
-#include "biases_cifar.h"
+// #include "types.h"
+// #include "top_cnn_mancini.h"
+// #include "coeffs_cifar.h"
+// #include "biases_cifar.h"
 
 // Including paramter (sizes, images to read, number of filters ...)
 #include "date2020_config.h"
@@ -657,132 +657,132 @@ bn:
 ////////////////////////////////////  Partie CNN  ///////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//square root function
-float __ieee754_sqrtf(float x)
-{
-	asm("... %0, %1"
-		: "=f"(x)
-		: "f"(x));
-	return x;
-}
+// //square root function
+// float __ieee754_sqrtf(float x)
+// {
+// 	asm("... %0, %1"
+// 		: "=f"(x)
+// 		: "f"(x));
+// 	return x;
+// }
 
-double __ieee754_sqrt(double x)
-{
-	asm("... %0, %1"
-		: "=f"(x)
-		: "f"(x));
-	return x;
-}
-
-
-// This use the AREA based resizing method, just like the one used in OpenCV
-void my_resizing(uint8_t* target_img, uint8_t* source_img, int source_size, int source_sizeX, int source_sizeY, int target_size, int target_sizeX, int target_sizeY)
-{
-  double x_ratio = (double) source_sizeX / target_sizeX;
-  double y_ratio = (double) source_sizeY / target_sizeY;
-  for (int y = 0; y < target_sizeY; y++) {
-    for (int x = 0; x < target_sizeX; x++) {
-      int x2 = (int) (x * x_ratio);
-      int y2 = (int) (y * y_ratio);
-      double x_diff = (x * x_ratio) - x2;
-      double y_diff = (y * y_ratio) - y2;
-      for (int k = 0; k < 3; k++) {
-        int index1 = source_sizeX * y2 + x2 + source_size/3 * k;
-        int index2 = source_sizeX * y2 + x2 + 1 + source_size/3 * k;
-        int index3 = source_sizeX * (y2 + 1) + x2 + source_size/3 * k;
-        int index4 = source_sizeX * (y2 + 1) + x2 + 1 + source_size/3 * k;
-        double v1 = source_img[index1] * (1 - x_diff) + source_img[index2] * x_diff;
-        double v2 = source_img[index3] * (1 - x_diff) + source_img[index4] * x_diff;
-        int index = target_sizeX * y + x + target_size/3 * k;
-        target_img[index] = (uint8_t) (v1 * (1 - y_diff) + v2 * y_diff);
-      }
-    }
-  }
-}
+// double __ieee754_sqrt(double x)
+// {
+// 	asm("... %0, %1"
+// 		: "=f"(x)
+// 		: "f"(x));
+// 	return x;
+// }
 
 
-
-//
-// Normalizing the image 24x24 to be feed to the CNN
-//
-float *normalizing(float *normalized_img, float *resized_img, int size) // height * width * 3
-{
-	...
-}
+// // This use the AREA based resizing method, just like the one used in OpenCV
+// void my_resizing(uint8_t* target_img, uint8_t* source_img, int source_size, int source_sizeX, int source_sizeY, int target_size, int target_sizeX, int target_sizeY)
+// {
+//   double x_ratio = (double) source_sizeX / target_sizeX;
+//   double y_ratio = (double) source_sizeY / target_sizeY;
+//   for (int y = 0; y < target_sizeY; y++) {
+//     for (int x = 0; x < target_sizeX; x++) {
+//       int x2 = (int) (x * x_ratio);
+//       int y2 = (int) (y * y_ratio);
+//       double x_diff = (x * x_ratio) - x2;
+//       double y_diff = (y * y_ratio) - y2;
+//       for (int k = 0; k < 3; k++) {
+//         int index1 = source_sizeX * y2 + x2 + source_size/3 * k;
+//         int index2 = source_sizeX * y2 + x2 + 1 + source_size/3 * k;
+//         int index3 = source_sizeX * (y2 + 1) + x2 + source_size/3 * k;
+//         int index4 = source_sizeX * (y2 + 1) + x2 + 1 + source_size/3 * k;
+//         double v1 = source_img[index1] * (1 - x_diff) + source_img[index2] * x_diff;
+//         double v2 = source_img[index3] * (1 - x_diff) + source_img[index4] * x_diff;
+//         int index = target_sizeX * y + x + target_size/3 * k;
+//         target_img[index] = (uint8_t) (v1 * (1 - y_diff) + v2 * y_diff);
+//       }
+//     }
+//   }
+// }
 
 
 
-//
-// Normalizing the image 24x24 to be feed to the CNN
-//
-float *normalizing_tensor(float *target_tensor, float *source_tensor, int size) // height * width
-{
-	...
-}
+// //
+// // Normalizing the image 24x24 to be feed to the CNN
+// //
+// float *normalizing(float *normalized_img, float *resized_img, int size) // height * width * 3
+// {
+// 	...
+// }
+
+
+
+// //
+// // Normalizing the image 24x24 to be feed to the CNN
+// //
+// float *normalizing_tensor(float *target_tensor, float *source_tensor, int size) // height * width
+// {
+// 	...
+// }
 
 
 
 
-/*
-  Converting an RGB image to a tensor,
-    i.e. R0R1R2......G0G1G2........B0B1B2......
-*/
-void img_to_tensor(float *target_tensor, uint8_t *source_img, int source_size, int source_sizeX, int source_sizeY)
-{
-	...
-}
+// /*
+//   Converting an RGB image to a tensor,
+//     i.e. R0R1R2......G0G1G2........B0B1B2......
+// */
+// void img_to_tensor(float *target_tensor, uint8_t *source_img, int source_size, int source_sizeX, int source_sizeY)
+// {
+// 	...
+// }
 
 
 
-//Cette fonction a été retirée de votre template, mais vous pouvez vous en inspirer pour écrire la votre
-/*extern void top_cnn_mancini(coef_type tab_coeffs[NB_COEFFS], coef_type tab_biais[NB_BIAIS], led_type cifar_class[1], image_type image_in[CONV_SIZE_1 * CONV_SIZE_1 * 3], image_type cifar_probabilities[NCAN_OUT_5]);*/
+// //Cette fonction a été retirée de votre template, mais vous pouvez vous en inspirer pour écrire la votre
+// /*extern void top_cnn_mancini(coef_type tab_coeffs[NB_COEFFS], coef_type tab_biais[NB_BIAIS], led_type cifar_class[1], image_type image_in[CONV_SIZE_1 * CONV_SIZE_1 * 3], image_type cifar_probabilities[NCAN_OUT_5]);*/  
 
 
-int perform_cnn(int img_in_number)	//fonction top du CNN
-{
-	// Source = the 640*480 image
-	int source_size = DISPLAY_IMAGE_SIZE; // SOURCE IMG (640*480)
-	int source_sizeY = DISPLAY_IMAGE_HEIGHT;
-	int source_sizeX = DISPLAY_IMAGE_WIDTH;
-	// target is the resized/normalized outputs
-	int target_size = NN_IN_SIZE; // RESIZED size
-	int target_sizeY = NN_IN_HEIGHT;
-	int target_sizeX = NN_IN_WIDTH;
+// int perform_cnn(int img_in_number)	//fonction top du CNN
+// {
+// 	// Source = the 640*480 image
+// 	int source_size = DISPLAY_IMAGE_SIZE; // SOURCE IMG (640*480)
+// 	int source_sizeY = DISPLAY_IMAGE_HEIGHT;
+// 	int source_sizeX = DISPLAY_IMAGE_WIDTH;
+// 	// target is the resized/normalized outputs
+// 	int target_size = NN_IN_SIZE; // RESIZED size
+// 	int target_sizeY = NN_IN_HEIGHT;
+// 	int target_sizeX = NN_IN_WIDTH;
 
-	// Allocate memory for intermediate images/tensors
-	uint8_t *source_img;
+// 	// Allocate memory for intermediate images/tensors
+// 	uint8_t *source_img;
 
-	// Load the 640*480 PPM image
-	source_img = ... ;
+// 	// Load the 640*480 PPM image
+// 	source_img = ... ;
 
-	// Resize to a 24*24 RGB img.
-	DEBUG_PRINTF("Starting resizing");
-	my_resizing( ... );
+// 	// Resize to a 24*24 RGB img.
+// 	DEBUG_PRINTF("Starting resizing");
+// 	my_resizing( ... );
 
-	// Convert to a tensor
-	DEBUG_PRINTF("Starting img_to_tensor \n");
-	img_to_tensor(...);
+// 	// Convert to a tensor
+// 	DEBUG_PRINTF("Starting img_to_tensor \n");
+// 	img_to_tensor(...);
 
-	// Normalization
-	DEBUG_PRINTF("Starting normalization \n");
-	normalizing_tensor(...);
+// 	// Normalization
+// 	DEBUG_PRINTF("Starting normalization \n");
+// 	normalizing_tensor(...);
 
-	/*top_cnn_mancini(tab_coeffs, tab_biais, cifar_class, normalized_tensor, cifar_probabilities);*/
+// 	/*top_cnn_mancini(tab_coeffs, tab_biais, cifar_class, normalized_tensor, cifar_probabilities);*/
 
-	printf("\nairplane :    %d \n", (int)cifar_probabilities[0]);
-	printf("automobile :  %d \n", (int)cifar_probabilities[1]);
-	printf("bird :        %d \n", (int)cifar_probabilities[2]);
-	printf("cat :         %d \n", (int)cifar_probabilities[3]);
-	printf("deer :        %d \n", (int)cifar_probabilities[4]);
-	printf("dog :         %d \n", (int)cifar_probabilities[5]);
-	printf("frog :        %d \n", (int)cifar_probabilities[6]);
-	printf("horse :       %d \n", (int)cifar_probabilities[7]);
-	printf("ship :        %d \n", (int)cifar_probabilities[8]);
-	printf("truck :       %d \n", (int)cifar_probabilities[9]);
-	printf("--> The image type is %s with a probability of : %d \n\n", Cifar10Base[cifar_class[0]], (int)cifar_probabilities[cifar_class[0]]);
+// 	printf("\nairplane :    %d \n", (int)cifar_probabilities[0]);
+// 	printf("automobile :  %d \n", (int)cifar_probabilities[1]);
+// 	printf("bird :        %d \n", (int)cifar_probabilities[2]);
+// 	printf("cat :         %d \n", (int)cifar_probabilities[3]);
+// 	printf("deer :        %d \n", (int)cifar_probabilities[4]);
+// 	printf("dog :         %d \n", (int)cifar_probabilities[5]);
+// 	printf("frog :        %d \n", (int)cifar_probabilities[6]);
+// 	printf("horse :       %d \n", (int)cifar_probabilities[7]);
+// 	printf("ship :        %d \n", (int)cifar_probabilities[8]);
+// 	printf("truck :       %d \n", (int)cifar_probabilities[9]);
+// 	printf("--> The image type is %s with a probability of : %d \n\n", Cifar10Base[cifar_class[0]], (int)cifar_probabilities[cifar_class[0]]);
 
-	return cifar_class[0];
-}
+// 	return cifar_class[0];
+// }
 
 
 
