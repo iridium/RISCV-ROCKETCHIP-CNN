@@ -36,14 +36,14 @@ JPG_LIB_DIR = $(DRIVER_DIR)/jpeg-6b
 default: demo
 demo: generate_mmc demo_date2020.riscv
 
-TARGETS = read_img_test1 demo_date2020 test_read_img_from_SD testInterrupt testInterruptDemo CNN_testbench new_vga_sobel_test new_vga_test_8b dram hello sdcard trace jump flash tag selftest eth lowrisc testPolling
+TARGETS = application hello_phelma read_img_test1 demo_date2020 test_read_img_from_SD testInterrupt testInterruptDemo CNN_testbench new_vga_sobel_test new_vga_test_8b dram hello sdcard trace jump flash tag selftest eth lowrisc testPolling
 
 # HMI and CNN stuff
 # DRIVER_TARGETS = CNN_RISCV convolution softmax maxpool syscalls hid memory memcmp memset strcmp strcpy strnlen wordcopy elf sdhci-minion-hash-md5 mini-printf random dhcp-client ethlib stublib logo # minion_helper diskio ff
 # MMC = blk_legacy.o crt.o ctype.o display_options.o div64.o elf.o ff.o hid.o logo.o lowrisc_mmc.o memory.o mini-printf.o mmc_legacy.o mmc.o sdhci-minion-hash-md5.o string.o strto.o syscalls.o time.o ethlib.o dhcp-client.o random.o
 
 # Original Targets
-DRIVER_TARGETS = syscalls hid memory memcmp memset strcmp strcpy strnlen wordcopy elf sdhci-minion-hash-md5 mini-printf random dhcp-client ethlib stublib logo
+DRIVER_TARGETS = syscalls hid memory memset strcmp strcpy strnlen wordcopy elf sdhci-minion-hash-md5 mini-printf random dhcp-client ethlib stublib logo
 MMC = blk_legacy.o crt.o ctype.o display_options.o div64.o elf.o ff.o hid.o logo.o lowrisc_mmc.o memory.o mini-printf.o mmc_legacy.o mmc.o sdhci-minion-hash-md5.o string.o strto.o syscalls.o time.o ethlib.o dhcp-client.o random.o
 
 
@@ -113,40 +113,49 @@ boot: $U
 
 MY_APPLICATION_C_FILES = lib/strto.c  lib/time.c  lib/div64.c  lib/ctype.c   drivers/block/blk_legacy.c  drivers/mmc/lowrisc_mmc.c  drivers/mmc/mmc_legacy.c \
 drivers/mmc/mmc.c lib/string.c  lib/display_options.c ../driver/mini-printf.c ../driver/hid.c ../driver/logo.c ../driver/syscalls.c application.c ../driver/ff.c \
-../driver/memory.c ../driver/sdhci-minion-hash-md5.c ../driver/elf.c ../driver/ethlib.c ../driver/dhcp-client.c ../driver/random.c 
+../driver/memory.c ../driver/sdhci-minion-hash-md5.c ../driver/elf.c ../driver/ethlib.c ../driver/dhcp-client.c ../driver/random.c
 
-# CNN_RISCV_MANCINI = 		../cnn_riscv_mancini/src/top_cnn_mancini.c \
-# 							../cnn_riscv_mancini/src/flush_mem.c \
-# 							../cnn_riscv_mancini/src/convolution.c \
-# 							../cnn_riscv_mancini/src/maxpool.c \
-# 							../cnn_riscv_mancini/src/reshape.c \
-# 							../cnn_riscv_mancini/src/perceptron.c \
-# 							../cnn_riscv_mancini/src/argmax.c \
-# 							../cnn_riscv_mancini/src/overlays.c
-CNN_RISCV_MANCINI = 
+#CNN_RISCV_MANCINI = 		../cnn_riscv_mancini/src/top_cnn_mancini.c \
+#							../cnn_riscv_mancini/src/flush_mem.c \
+#							../cnn_riscv_mancini/src/convolution.c \
+#							../cnn_riscv_mancini/src/maxpool.c \
+#							../cnn_riscv_mancini/src/reshape.c \
+#							../cnn_riscv_mancini/src/perceptron.c \
+#							../cnn_riscv_mancini/src/argmax.c \
+#						../cnn_riscv_mancini/src/overlays.c
 
 # CNN_RISCV_MANCINI_INCLUDE = ../cnn_riscv_mancini/include
-CNN_RISCV_MANCINI_INCLUDE = 
+
+HELLO_C_FILES = hello_phelma.c lib/strto.c lib/div64.c  lib/ctype.c lib/string.c  ../driver/mini-printf.c ../driver/hid.c ../driver/logo.c ../driver/ff.c \
+../driver/memory.c ../driver/sdhci-minion-hash-md5.c ../driver/elf.c ../driver/ethlib.c ../driver/dhcp-client.c ../driver/random.c ../driver/syscalls.c
+
+HELLO_O_FILES = hello_phelma.o crt.o ctype.o div64.o elf.o string.o strto.o dhcp-client.o random.o \
+hid.o logo.o memory.o mini-printf.o syscalls.o
 
 APPLICATION_O_FILES = crt.o blk_legacy.o ctype.o display_options.o div64.o elf.o ff.o hid.o logo.o lowrisc_mmc.o memory.o mini-printf.o \
-      mmc_legacy.o mmc.o sdhci-minion-hash-md5.o string.o strto.o syscalls.o time.o ethlib.o dhcp-client.o random.o \
-	  top_cnn_mancini.o \
-	  flush_mem.o \
-	  convolution.o \
-	  maxpool.o \
-	  reshape.o \
-	  perceptron.o \
-	  argmax.o \
-	  overlays.o
+      mmc_legacy.o mmc.o sdhci-minion-hash-md5.o string.o strto.o syscalls.o time.o ethlib.o dhcp-client.o random.o
 
-application: $(MY_APPLICATION_C_FILES)
+CNN_C_FILES = cnn/src/cnn.c cnn/src/conv2d.c cnn/src/maxPool.c cnn/src/reshape.c cnn/src/perceptron.c
+
+CNN_O_FILES = cnn.o conv2d.o perceptron.o maxPool.o reshape.o
+
+CNN_HEADER_FILES = cnn/include
+
+application: $(MY_APPLICATION_C_FILES) $(CNN_C_FILES)
 	riscv64-unknown-elf-gcc -c -o crt.o ../driver/crt.S
-	riscv64-unknown-elf-gcc -c -g -Iinclude -I$(CNN_RISCV_MANCINI_INCLUDE) -I./arch/riscv/include -I../driver -include ./include/linux/kconfig.h \
+	riscv64-unknown-elf-gcc -c -g -Iinclude -I$(CNN_HEADER_FILES) -I./arch/riscv/include -I../driver -include ./include/linux/kconfig.h \
 							 -D__KERNEL__ -D__UBOOT__ -w -fno-builtin -ffreestanding -fno-math-errno -fshort-wchar -Os -fno-stack-protector -fno-delete-null-pointer-checks \
 							 -g -fstack-usage -ffixed-gp -fpic -fno-strict-aliasing -fno-common -gdwarf-2 -I. -fno-builtin-printf -fno-builtin-memcpy \
-							 $(MY_APPLICATION_C_FILES) $(CNN_RISCV_MANCINI)
-	riscv64-unknown-elf-gcc -o $@ -g -w -nostdlib -nostartfiles $(APPLICATION_O_FILES) application.o -T ../driver/test.ld
+							 $(MY_APPLICATION_C_FILES) $(CNN_C_FILES)
+	riscv64-unknown-elf-gcc -o $@ -g -w -nostdlib -nostartfiles $(APPLICATION_O_FILES) $(CNN_O_FILES) application.o -T ../driver/test.ld
 
+hello_phelma: $(HELLO_C_FILES)
+	riscv64-unknown-elf-gcc -c -o crt.o ../driver/crt.S
+	riscv64-unknown-elf-gcc -c -g -Iinclude -I./arch/riscv/include -I../driver -include ./include/linux/kconfig.h \
+							 -D__KERNEL__ -D__UBOOT__ -w -fno-builtin -ffreestanding -fno-math-errno -fshort-wchar -Os -fno-stack-protector -fno-delete-null-pointer-checks \
+							 -g -fstack-usage -ffixed-gp -fpic -fno-strict-aliasing -fno-common -gdwarf-2 -I. -fno-builtin-printf -fno-builtin-memcpy \
+							 $(HELLO_C_FILES)
+	riscv64-unknown-elf-gcc -o $@ -g -w -nostdlib -nostartfiles $(HELLO_O_FILES) hello_phelma.o -T ../driver/test.ld
 #--------------------------------------------------------------------
 # clean up
 #--------------------------------------------------------------------

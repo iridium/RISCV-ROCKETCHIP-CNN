@@ -4,34 +4,27 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <memory.h>
-#include <math.h>
-#include "../driver/encoding.h"
-#include "../driver/mini-printf.h"
-#include "../driver/diskio.h"
-#include "../driver/ff.h"
-#include "../driver/bits.h"
-#include "../driver/hid.h"
-#include "../driver/eth.h"
-#include "../driver/elfriscv.h"
-#include "../driver/lowrisc_memory_map.h"
+// #include <math.h>
+#include "encoding.h"
+#include "mini-printf.h"
+#include "diskio.h"
+#include "ff.h"
+#include "bits.h"
+#include "hid.h"
+#include "eth.h"
+#include "elfriscv.h"
+#include "lowrisc_memory_map.h"
 
-// For the CNN application ----
-<<<<<<< HEAD
-#include "../driver/bits/types.h"
-#include "top_cnn_mancini.h"
-#include "coeffs_cifar.h"
-#include "biases_cifar.h"
-=======
-// #include "types.h"
-// #include "top_cnn_mancini.h"
-// #include "coeffs_cifar.h"
-// #include "biases_cifar.h"
->>>>>>> ea5c14e62f7750c889d4c2d5c10fd8fda5f81bb8
+// Including our header
+#include "application.h"
+
+// Including our CNN
+#include "cnn.h"
 
 // Including paramter (sizes, images to read, number of filters ...)
 #include "date2020_config.h"
 
-extern unsigned char OVERLAYS_LIST[];
+unsigned char OVERLAYS_LIST[];
 //-----------------------------
 
 #define DEBUG 0
@@ -156,26 +149,6 @@ char *My_strtok(char *s, const char *ct)
 	return (sbegin);
 }
 
-// Cifar Related Results  -------------------------------------
-
-unsigned int cifar_class[1];        // Contains the name of the result class
-image_type cifar_probabilities[10]; // Contains the probability of each class
-const char Cifar10Base[10][11] =    // Contains the name of each class
-{
-	"Airplane",
-	"Automobile",
-	"Bird",
-	"Cat",
-	"Deer",
-	"Dog",
-	"Frog",
-	"Horse",
-	"Ship",
-	"Truck"
-};
-
-//--------------------------------------------------------------
-
 extern volatile uint64_t *const hid_new_vga_ptr; // = (volatile uint64_t *)(new_vga_base_addr);
 
 uint8_t TAB_GS[NB_IMAGES_TO_BE_READ][DISPLAY_IMAGE_SIZE] = {0};          //Tableau de pixel de toutes les images rangeais les uns apres les autres
@@ -235,7 +208,7 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 	if (fr)
 	{
 		printf("Failed to open %s!\n",  file_name );
-		return 0;
+		//exit(1);
 	}
 
 	//Lecture de l'entete
@@ -279,10 +252,6 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 		{
 			pixels[i] = 0;
 		}
-		//printf("File size: %d and image size : %d * %d = %d\n", ... ,
-		//       tab_length[ ... ],
-		//       tab_width[ ... ],
-		//       tab_size[ ... ]);
 
 		//plop = f_gets(text, 10000, ... );
 		printf("File size: %d and image size : %d * %d = %d\n", tab_size[n_image] ,
@@ -297,19 +266,6 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 		while (&fil != NULL && i < (3 * size))
 		{
 			plop = f_gets(text, 10000, &fil ); //On lit une ligne
-
-			// strToken = ...(text, " ");  //On separe les differents chiffres
-			//Pour tous les chiffres de la ligne
-			// while (strToken != NULL && i < (3 * size))
-			// {
-			//   pixels[i] = ...(strToken); //On remplit le tableau pixel par pixel
-			//   i++;
-			//   strToken = ...(NULL, " "); //On selectionne le token suivant
-			//   if (strToken[0] == '\n')
-			//   { // On enlève les caractère de saut de ligne '\n'
-			//     strToken = NULL;
-			//   }
-			// }
 
 			strToken = My_strtok(text, " ");  //On separe les differents chiffres
 			//Pour tous les chiffres de la ligne
@@ -328,18 +284,6 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 	}
 
 	printf("n_image = %d\n", n_image);
-	//for (i = 0; i < size * 3; i++)
-	//{
-	//  global_tab[...] = pixels[i]; //On remplit le tableau global pour pouvoir reutiliser le tableau pixel
-	//}
-	//printf("Closing file %s\n", ...);
-
-	// Close the file
-	//if (f_close(...))
-	//{
-	//  printf("fail to close file!");
-	//  return 0;
-	//}
 
 	//OBS2: This for was modified to save the files in n_image*width*length*bit
 	for (j = 0; j < size * 3; j += 3)
@@ -355,7 +299,7 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 	if (f_close(&fil))
 	{
 		printf("Fail to close file!");
-		return 0;
+		//exit(1);
 	}
 
 	//free(...);
@@ -374,12 +318,6 @@ void read_pic(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8
 void convert_to_greyscale(int n_image, int *tab_size, int *tab_width, int *tab_length, uint8_t *global_tab, uint8_t image[CONV_READ_SIZE_PGM])
 {
 	printf("Affichage image numero : %d   %d*%d=%d\n", n_image, tab_width[n_image - 1], tab_length[n_image - 1], tab_size[n_image - 1]);
-	//Transformation Greyscale
-	//for (int i = 0; i < tab_size[n_image - 1] * 3; i += 3)
-	//{
-		//For each pixel on R, G et B                  //On remplit pixel par pixel le tableau image en utilisant 0.3 de la valeur de R, 0.57 de la valeur de G et et 0.11 de la valeur de B par pixels du tableau global_tab
-	//	...
-	//}
   int pass = (n_image - 1)*CONV_READ_SIZE_PPM;
   for (int i = 0; i < tab_size[n_image - 1] * 3; i ++)
 	{
@@ -464,7 +402,7 @@ void enable_plic_interrupts()
 
   // PLIC ENABLE interrupts of ID 1,2,3 and 4
   // (ID 1 and ID 2 are connected to zero)
-  *(volatile unsigned int *) PLIC_INT_ENABLE_BASEADDR = 0x1e;
+  *(volatile unsigned int *) PLIC_INT_ENABLE_BASEADDR = (PLIC_ENABLE_BTNW | PLIC_ENABLE_BTNE | PLIC_ENABLE_BTNN | PLIC_ENABLE_BTNS);
 
   // Enable MEIP (Machine External Interrupt Pending) bit in MIE register
   set_csr(mie, MIP_MEIP);
@@ -490,7 +428,7 @@ void external_interrupt(void)
 
   // Read the ID (the highest priority pending interrupt)
   // If the value we read is zero then no pending interrupt is coming from PLIC
-  claim = plic[ PLIC_INT_PENDING_BASEADDR ]; 									//consulter le fichier syscall.c
+  claim = plic[ 0x80001 ]; 									//consulter le fichier syscall.c
   clear_csr(mie, MIP_MEIP);
   if(isBouncing == 0)
   {
@@ -525,7 +463,7 @@ void external_interrupt(void)
   // Write the ID of the interrupt source to the claim/complete register to complete the interrupt
   // The PLIC will clear the pending bit of the corresponding ID
   // /!\ If the ID don't match the pending ID, the completion is silently ignored
-  plic[ PLIC_HART0_CLAIM_COMPLETE_ADDR ] = claim;
+  plic[ 0x80001 ] = claim;
   set_csr(mie, MIP_MEIP);
 }
 
@@ -545,9 +483,6 @@ void external_interrupt(void)
 
 // MACROS
 #define indexCalculationCONV(i, j, c, size_i, size_j, size_c) (i + j * size_i + c * size_i * size_j)
-
-
-
 
 // Filter type enum
 enum filter_type
@@ -579,12 +514,6 @@ typedef enum filter_type filter_type;
 
 /* CONV BIAISES */
 #define BIAISES_CONV_FIXED_FORMAT float
-
-
-
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////// CONVOLUTION SIMPLE FIN //////////////////////////////////////
@@ -665,187 +594,119 @@ bn:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // //square root function
-// float __ieee754_sqrtf(float x)
-// {
-// 	asm("... %0, %1"
-// 		: "=f"(x)
-// 		: "f"(x));
-// 	return x;
-// }
-
-// double __ieee754_sqrt(double x)
-// {
-// 	asm("... %0, %1"
-// 		: "=f"(x)
-// 		: "f"(x));
-// 	return x;
-// }
-
-
-// // This use the AREA based resizing method, just like the one used in OpenCV
-// void my_resizing(uint8_t* target_img, uint8_t* source_img, int source_size, int source_sizeX, int source_sizeY, int target_size, int target_sizeX, int target_sizeY)
-// {
-//   double x_ratio = (double) source_sizeX / target_sizeX;
-//   double y_ratio = (double) source_sizeY / target_sizeY;
-//   for (int y = 0; y < target_sizeY; y++) {
-//     for (int x = 0; x < target_sizeX; x++) {
-//       int x2 = (int) (x * x_ratio);
-//       int y2 = (int) (y * y_ratio);
-//       double x_diff = (x * x_ratio) - x2;
-//       double y_diff = (y * y_ratio) - y2;
-//       for (int k = 0; k < 3; k++) {
-//         int index1 = source_sizeX * y2 + x2 + source_size/3 * k;
-//         int index2 = source_sizeX * y2 + x2 + 1 + source_size/3 * k;
-//         int index3 = source_sizeX * (y2 + 1) + x2 + source_size/3 * k;
-//         int index4 = source_sizeX * (y2 + 1) + x2 + 1 + source_size/3 * k;
-//         double v1 = source_img[index1] * (1 - x_diff) + source_img[index2] * x_diff;
-//         double v2 = source_img[index3] * (1 - x_diff) + source_img[index4] * x_diff;
-//         int index = target_sizeX * y + x + target_size/3 * k;
-//         target_img[index] = (uint8_t) (v1 * (1 - y_diff) + v2 * y_diff);
-//       }
-//     }
-//   }
-// }
-
-
-
-// //
-// // Normalizing the image 24x24 to be feed to the CNN
-// //
-// float *normalizing(float *normalized_img, float *resized_img, int size) // height * width * 3
-// {
-// 	...
-// }
-
-
-
-// //
-// // Normalizing the image 24x24 to be feed to the CNN
-// //
-// float *normalizing_tensor(float *target_tensor, float *source_tensor, int size) // height * width
-// {
-// 	...
-// }
-
-
-
-
-// /*
-//   Converting an RGB image to a tensor,
-//     i.e. R0R1R2......G0G1G2........B0B1B2......
-// */
-// void img_to_tensor(float *target_tensor, uint8_t *source_img, int source_size, int source_sizeX, int source_sizeY)
-// {
-// 	...
-// }
-
-
-
-// //Cette fonction a été retirée de votre template, mais vous pouvez vous en inspirer pour écrire la votre
-// /*extern void top_cnn_mancini(coef_type tab_coeffs[NB_COEFFS], coef_type tab_biais[NB_BIAIS], led_type cifar_class[1], image_type image_in[CONV_SIZE_1 * CONV_SIZE_1 * 3], image_type cifar_probabilities[NCAN_OUT_5]);*/  
-
-
-// int perform_cnn(int img_in_number)	//fonction top du CNN
-// {
-// 	// Source = the 640*480 image
-// 	int source_size = DISPLAY_IMAGE_SIZE; // SOURCE IMG (640*480)
-// 	int source_sizeY = DISPLAY_IMAGE_HEIGHT;
-// 	int source_sizeX = DISPLAY_IMAGE_WIDTH;
-// 	// target is the resized/normalized outputs
-// 	int target_size = NN_IN_SIZE; // RESIZED size
-// 	int target_sizeY = NN_IN_HEIGHT;
-// 	int target_sizeX = NN_IN_WIDTH;
-
-// 	// Allocate memory for intermediate images/tensors
-// 	uint8_t *source_img;
-
-// 	// Load the 640*480 PPM image
-// 	source_img = ... ;
-
-// 	// Resize to a 24*24 RGB img.
-// 	DEBUG_PRINTF("Starting resizing");
-// 	my_resizing( ... );
-
-// 	// Convert to a tensor
-// 	DEBUG_PRINTF("Starting img_to_tensor \n");
-// 	img_to_tensor(...);
-
-// 	// Normalization
-// 	DEBUG_PRINTF("Starting normalization \n");
-// 	normalizing_tensor(...);
-
-// 	/*top_cnn_mancini(tab_coeffs, tab_biais, cifar_class, normalized_tensor, cifar_probabilities);*/
-
-// 	printf("\nairplane :    %d \n", (int)cifar_probabilities[0]);
-// 	printf("automobile :  %d \n", (int)cifar_probabilities[1]);
-// 	printf("bird :        %d \n", (int)cifar_probabilities[2]);
-// 	printf("cat :         %d \n", (int)cifar_probabilities[3]);
-// 	printf("deer :        %d \n", (int)cifar_probabilities[4]);
-// 	printf("dog :         %d \n", (int)cifar_probabilities[5]);
-// 	printf("frog :        %d \n", (int)cifar_probabilities[6]);
-// 	printf("horse :       %d \n", (int)cifar_probabilities[7]);
-// 	printf("ship :        %d \n", (int)cifar_probabilities[8]);
-// 	printf("truck :       %d \n", (int)cifar_probabilities[9]);
-// 	printf("--> The image type is %s with a probability of : %d \n\n", Cifar10Base[cifar_class[0]], (int)cifar_probabilities[cifar_class[0]]);
-
-// 	return cifar_class[0];
-// }
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////  Partie Display  /////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-void display(int img_in_number, filter_type filter_nb, uint8_t previous_imageSel, uint8_t previous_filterSel) //, uint8_t *edgeDetectorDone, uint8_t *CNNDone)
+float __ieee754_sqrtf(float x)
 {
-	volatile uint64_t *display_ptr;
-	volatile uint64_t *diplay_ptr_filtered;
-	volatile uint8_t *ptr_selected_img;
-	volatile uint8_t *ptr_selected_img_filtered;
+  asm("fsqrt.s %0, %1"
+      : "=f"(x)
+      : "f"(x));
+  return x;
+}
 
-	// Get the image to print
-	display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
-	ptr_selected_img = (uint8_t *)(TAB_GS[img_in_number - 1]);
-	diplay_ptr_filtered = (uint64_t *)(TAB_GS_FILTERED[img_in_number - 1]);
-	ptr_selected_img_filtered = (uint8_t *)(TAB_GS[img_in_number - 1]);
+double __ieee754_sqrt(double x)
+{
+  asm("fsqrt.d %0, %1"
+      : "=f"(x)
+      : "f"(x));
+  return x;
+}
 
-	int x, y;
 
-  switch (filter_nb)				//Disjonction de cas en fonction du filtre sélectionné
-  {
+// This use the AREA based resizing method, just like the one used in OpenCV
+void my_resizing(uint8_t* target_img, uint8_t* source_img, int source_size, int source_sizeX, int source_sizeY, int target_size, int target_sizeX, int target_sizeY)
+{
+  double x_ratio = (double) source_sizeX / target_sizeX;
+  double y_ratio = (double) source_sizeY / target_sizeY;
+  for (int y = 0; y < target_sizeY; y++) {
+    for (int x = 0; x < target_sizeX; x++) {
+      for (int k = 0; k < 3; k++) {
+        int tot = 0;
 
-  case BYPASS:
-    on_screen( BYPASS, 10, display_ptr );
-    break;
-
-  case EDGE_DETECTOR:
-    on_screen(EDGE_DETECTOR, 11,diplay_ptr_filtered );
-    break;
-
-  case CNN_CLASSIFIER:
-    // In this case we visualize the image, while computing ...
-    display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
-      for (x = 0; x < 640 / 8; ++x)
-      {
-        hid_new_vga_ptr[x + y * 640 / 8] = (*display_ptr);
-	      display_ptr++;
+        for (int j = 0; j < y_ratio; j++){
+          for (int i = 0; i < x_ratio; i++){
+            int x2 = x_ratio*x + i;
+            int y2 = y_ratio*y + j;
+            tot += *(source_img + x2 + source_sizeX*y2 + source_sizeX*source_sizeY*k);
+          }
+        }
+        uint8_t moy = tot/(y_ratio*x_ratio);
+        *(target_img + x + target_sizeX*y + target_sizeX*target_sizeY*k) = moy;
       }
     }
-    // Launch the CNN
-    int result = perform_cnn(img_in_number) ;
-    // When finished, show the LABEL as an overlay.
-    on_screen( CNN_CLASSIFIER, result, ptr_selected_img );
-    break;
   }
-    {
-    for (y = 0; y < 480; ++y)
 }
 
 
 
+//
+// Normalizing the image 24x24 to be feed to the CNN
+//
+void normalizing(float* normalized_img, uint8_t* resized_img, int size){ // height * width * 3 
+// J'AI CHANGé L'ENTETE, RESIZEDIMG EST UN UINT_8* AU LIEU DE FLOAT*    
+    float mu = 0;
+    float ecartype = 0;
+
+    // Calcul de la moyenne
+    for (int i = 0; i < size; i++) {mu += *(resized_img+i);}
+    mu /= size;
+
+    // Calcul de l'écart-type
+    for (int i = 0; i < size; i++) {ecartype += (*(resized_img+i) - mu) * (*(resized_img+i) - mu);}
+    ecartype = ecartype/size;//__ieee754_sqrt(ecartype / size);
+
+    // Calcul de la valeur maximale
+    float maximum = 0;
+    //if (*1/__ieee754_sqrt(size/3) > ecartype){maximum = 1/__ieee754_sqrt(size/3);}
+    if (1/(size/3) > ecartype){maximum = 1/(size/3);}
+    else {maximum = ecartype;}
+
+    // Normalisation des valeurs de la matrice
+    for (int i = 0; i < size; i++){
+      *(normalized_img+i) = (*(resized_img+i) - mu) / maximum; //(mat_int.values[i][j][k] - mu) / maximum;
+    }
+}
+
+int perform_cnn(int img_in_number)
+{
+  // Source = the 640*480 image
+  int source_size = DISPLAY_IMAGE_SIZE; // SOURCE IMG (640*480)
+  int source_sizeY = DISPLAY_IMAGE_HEIGHT;
+  int source_sizeX = DISPLAY_IMAGE_WIDTH;
+  // target is the resized/normalized outputs
+  int target_size = NN_IN_SIZE; // RESIZED size
+  int target_sizeY = NN_IN_HEIGHT;
+  int target_sizeX = NN_IN_WIDTH;
+
+  // Allocate memory for intermediate images/tensors
+  uint8_t *source_img = (uint8_t *)calloc(DISPLAY_IMAGE_SIZE * 3, sizeof(*source_img));
+  uint8_t *resized_img 		  = (uint8_t *)calloc(NN_IN_SIZE * 3, sizeof(*resized_img));
+  float *normalized_tensor 	= (float *)calloc(NN_IN_SIZE * 3, sizeof(*normalized_tensor));
+
+  // Load the 640*480 PPM image
+  source_img = &global_tab[(img_in_number - MIN_IMAGES_TO_READ) * DISPLAY_IMAGE_SIZE * 3];
+
+  // Resize to a 24*24 RGB img.
+  DEBUG_PRINTF("Starting resizing");
+  my_resizing(resized_img, source_img, source_size, source_sizeX, source_sizeY,
+              target_size, target_sizeX, target_sizeY);
+
+  // Already a tensor
+  
+  // Normalization
+  DEBUG_PRINTF("Starting normalization \n");
+  normalizing(normalized_tensor, resized_img, target_size);
+
+  // Getting the class detected by the CNN in index
+  int index = cnn(normalized_tensor);
+
+  free(source_img);
+  free(resized_img);
+  free(normalized_tensor);	
+  return index;	
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////  Partie Display  /////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void on_screen(int mode, int class, uint8_t *img)
 {
@@ -882,9 +743,9 @@ void on_screen(int mode, int class, uint8_t *img)
     x_offset = 0;
   }
 
-  for (y = 0; y < 480; ++y)						//Affichage de l'image
+  for (y = 0; y < 480; y++)						//Affichage de l'image
   {
-    for (x = 0; x < 640 / 8; ++x)
+    for (x = 0; x < 640 / 8; x++)
     {
       if ( (x<=OVERLAY_WIDTH/8)&&(y<=OVERLAY_HEIGHT))
       { //on verifie si on est dans la zone de l'etiquette
@@ -902,15 +763,56 @@ void on_screen(int mode, int class, uint8_t *img)
 
 
 
+void display(int img_in_number, filter_type filter_nb, uint8_t previous_imageSel, uint8_t previous_filterSel) //, uint8_t *edgeDetectorDone, uint8_t *CNNDone)
+{
+	volatile uint64_t *display_ptr;
+	volatile uint64_t *diplay_ptr_filtered;
+	volatile uint8_t *ptr_selected_img;
+	volatile uint8_t *ptr_selected_img_filtered;
 
+	// Get the image to print
+	display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
+	ptr_selected_img = (uint8_t *)(TAB_GS[img_in_number - 1]);
+	diplay_ptr_filtered = (uint64_t *)(TAB_GS_FILTERED[img_in_number - 1]);
+	ptr_selected_img_filtered = (uint8_t *)(TAB_GS[img_in_number - 1]);
 
+	int x, y;
+
+  switch (filter_nb)				//Disjonction de cas en fonction du filtre sélectionné
+  {
+
+  case BYPASS:
+    on_screen( BYPASS, 10, ptr_selected_img );
+    break;
+
+  case EDGE_DETECTOR:
+    on_screen(EDGE_DETECTOR, 11,ptr_selected_img_filtered );
+    break;
+
+  case CNN_CLASSIFIER:
+    // In this case we visualize the image, while computing ...
+    display_ptr = (uint64_t *)(TAB_GS[img_in_number - 1]);
+    
+    for (y = 0; y < 480; ++y)
+    {
+      for (x = 0; x < 640 / 8; ++x)
+      {
+        hid_new_vga_ptr[x + y * 640 / 8] = (*display_ptr);
+	      display_ptr++;
+      }
+    }
+    // Launch the CNN
+    int result = perform_cnn(img_in_number) ;
+    // When finished, show the LABEL as an overlay.
+    on_screen( CNN_CLASSIFIER, result, ptr_selected_img );
+    break;
+  }
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////  Fonction Main //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 int main(void)
 {
@@ -941,7 +843,7 @@ int main(void)
 	for (r = n_image; r <= NB_IMAGES_TO_BE_READ; r++)				// Lire chaque image et les stocker dans global_tab
 	{
 
-		read_pic(r, tab_size[r-1],tab_width[r-1],tab_[r-1], global_tab);
+		read_pic(r, tab_size,tab_width,tab_length, global_tab);
 
 	}
 
@@ -962,7 +864,7 @@ int main(void)
   //}
   for (r = n_image; r <= NB_IMAGES_TO_BE_READ; r++)					//Pour chaque image de global_tab, appliquer le greyscale et stocker le résultat dans TAB_GS
   {
-    convert_to_greyscale(r, tab_size[r-1],tab_width[r-1],tab_[r-1], global_tab, TAB_GS[r]) ;
+    convert_to_greyscale(r, tab_size,tab_width,tab_length, global_tab, TAB_GS[r]) ;
   }
 
 
@@ -999,12 +901,12 @@ int main(void)
   {
     if ( (imageSel!= previous_imageSel)||(filterSel!=previous_filterSel))    //Comparaison des valeurs courantes et précédentes des variables de sélection de l'image et du filtre
     {
-      if ( imageSel==BYPASSS )
+      if ( imageSel==BYPASS )
       {
         edgeDetectorDone = 0;
         CNNDone = 0;
       }
-
+      printf("imageSel = %d     filterSel = %d \n", imageSel, filterSel);
       display( imageSel, filterSel, previous_imageSel, previous_filterSel );		//Si différence, maise à jour de l'affichage
 
       previous_imageSel = imageSel ;						//Mise à jour de des valeurs de previous_imageSel et previous_filterSel en fonction des valeurs courantes
@@ -1183,3 +1085,9 @@ unsigned long mmc_bwrite(void *dev, int start, int blkcnt, const void *src)
 }
 
 const char version_string[] = "LowRISC minimised u-boot for SD-Card";
+
+
+
+
+
+

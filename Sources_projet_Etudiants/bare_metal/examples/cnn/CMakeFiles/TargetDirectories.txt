@@ -1,0 +1,3 @@
+/home/camille/Documents/RISCV-ROCKETCHIP-CNN/Sources_projet_Etudiants/bare_metal/examples/cnn/CMakeFiles/main.dir
+/home/camille/Documents/RISCV-ROCKETCHIP-CNN/Sources_projet_Etudiants/bare_metal/examples/cnn/CMakeFiles/edit_cache.dir
+/home/camille/Documents/RISCV-ROCKETCHIP-CNN/Sources_projet_Etudiants/bare_metal/examples/cnn/CMakeFiles/rebuild_cache.dir
